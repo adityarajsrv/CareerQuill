@@ -1,4 +1,3 @@
-import Branding from "../components/Branding"
 import Examples from "../components/Examples"
 import Features from "../components/Features"
 import Footer from "../components/Footer"
@@ -14,7 +13,6 @@ const Home = () => {
         <Features />
         <Examples />
         <Workflow />
-        <Branding />
         <Footer />
     </div>
   )

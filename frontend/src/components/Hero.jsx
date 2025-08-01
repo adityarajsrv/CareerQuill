@@ -27,7 +27,7 @@ const Hero = () => {
     <div className="flex flex-row justify-between h-screen bg-white">
       <div className="mr-12">
         <h1 className="text-6xl font-bold text-gray-800 p-2 ml-24 mt-36">
-          Resume<span className="text-blue-500">Forge</span>
+          Career<span className="text-blue-500">Quill</span>
         </h1>
         <h3 className="text-2xl font-semibold text-gray-500 ml-28 mt-2">
           Build Smarter, Stand Out Faster
@@ -37,7 +37,7 @@ const Hero = () => {
           ATS-compatible resumes that get you noticed.
         </p>
         <div className="flex space-x-5 ml-28 mt-5">
-          <button className="px-5 py-2 bg-blue-500 text-white border rounded-lg cursor-pointer hover:text-black border-white">
+          <button className="px-5 py-2 bg-blue-500 text-white border rounded-lg cursor-pointer hover:bg-blue-600 border-white">
             Build My Resume
           </button>
           <button className="px-5 py-2 bg-gray-100 text-black border rounded-lg cursor-pointer hover:bg-gray-300 hover:border-none border-gray-200">
@@ -59,7 +59,7 @@ const Hero = () => {
           <img
             src={images[currentImageIndex]}
             alt="Hero"
-            className="absolute w-full h-full border border-gray-100 shadow-2xl shadow-blue-100 object-cover backface-hidden"
+            className="absolute w-full h-full border border-gray-100 shadow-2xl shadow-gray-300 object-cover backface-hidden"
           />
         </div>
       </div>

@@ -34,7 +34,7 @@ const Workflow = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8 lg:px-10 bg-gray-50">
+    <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
           How It Works
