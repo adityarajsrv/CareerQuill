@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const images = [
-    '/src/assets/heroImg-1.png',
-    '/src/assets/heroImg-2.png',
-    '/src/assets/heroImg-3.png',
+    "/src/assets/heroImg-1.png",
+    "/src/assets/heroImg-2.png",
+    "/src/assets/heroImg-3.png",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -13,13 +14,13 @@ const Hero = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsFlipping(true); 
+      setIsFlipping(true);
       setTimeout(() => {
-        setCurrentImageIndex(nextImageIndex); 
-        setNextImageIndex((prev) => (prev + 1) % images.length); 
-        setIsFlipping(false); 
-      }, 300); 
-    }, 3000); 
+        setCurrentImageIndex(nextImageIndex);
+        setNextImageIndex((prev) => (prev + 1) % images.length);
+        setIsFlipping(false);
+      }, 300);
+    }, 3000);
     return () => clearInterval(interval);
   }, [nextImageIndex, images.length]);
 
@@ -37,15 +38,21 @@ const Hero = () => {
           ATS-compatible resumes that get you noticed.
         </p>
         <div className="flex space-x-5 ml-28 mt-5">
-          <button className="px-5 py-2 bg-blue-500 text-white border rounded-lg cursor-pointer hover:bg-blue-600 border-white">
-            Build My Resume
-          </button>
-          <button className="px-5 py-2 bg-gray-100 text-black border rounded-lg cursor-pointer hover:bg-gray-300 hover:border-none border-gray-200">
-            View Templates
-          </button>
+          <Link to="/build">
+            <button className="px-5 py-2 bg-blue-500 text-white border rounded-lg cursor-pointer hover:bg-blue-600 border-white">
+              Build My Resume
+            </button>
+          </Link>
+          <Link to="/templates">
+            <button className="px-5 py-2 bg-gray-100 text-black border rounded-lg cursor-pointer hover:bg-gray-300 hover:border-none border-gray-200">
+              View Templates
+            </button>
+          </Link>
         </div>
         <ul className="flex flex-row space-x-5">
-          <li className="text-gray-500 ml-28 mt-3">💳 No credit card required</li>
+          <li className="text-gray-500 ml-28 mt-3">
+            💳 No credit card required
+          </li>
           <li className="text-gray-500 ml-4 mt-3">📄 Free templates</li>
           <li className="text-gray-500 ml-4 mt-3">🚀 AI-powered</li>
         </ul>
@@ -53,7 +60,7 @@ const Hero = () => {
       <div className="relative w-[470px] h-[500px] mt-18 mr-62 perspective-1000">
         <div
           className={`relative w-full h-full transition-transform duration-1000 transform-style-preserve-3d ${
-            isFlipping ? 'rotate-y-180' : 'rotate-y-0'
+            isFlipping ? "rotate-y-180" : "rotate-y-0"
           }`}
         >
           <img
