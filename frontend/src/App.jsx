@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
 import Templates from "./pages/Templates";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import ResumeTemplate1 from "./templates/ResumeTemplate1";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/templates" element={<Templates/>} />
         <Route path="/build" element={<ResumeBuilder />} />
+        <Route path = "/template1" element={<ResumeTemplate1 />} />
       </Routes>
     </Router>
   )

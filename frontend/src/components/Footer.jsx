@@ -50,7 +50,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
           <p>
-            © {new Date().getFullYear()} ResumeForge | All rights reserved | Built by Aditya Raj Srivastava
+            © {new Date().getFullYear()} CareerQuill | All rights reserved | Built by Aditya Raj Srivastava
           </p>
         </div>
       </div>
