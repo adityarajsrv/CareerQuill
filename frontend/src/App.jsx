@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Templates from "./pages/Templates";
 import ResumeBuilder from "./pages/ResumeBuilder";
 import ResumeTemplate1 from "./templates/ResumeTemplate1";
+import ResumeTemplate2 from "./templates/ResumeTemplate2";
 
 const App = () => {
   return (
@@ -14,6 +15,12 @@ const App = () => {
         <Route path="/templates" element={<Templates/>} />
         <Route path="/build" element={<ResumeBuilder />} />
         <Route path = "/template1" element={<ResumeTemplate1 />} />
+        <Route path = "/template2" element={<ResumeTemplate2 />} />
+        <Route path = "/template3" element={<ResumeTemplate1 />} />
+        <Route path = "/template4" element={<ResumeTemplate1 />} />
+        <Route path = "/template5" element={<ResumeTemplate1 />} />
+        <Route path = "/template6" element={<ResumeTemplate1 />} />
+
       </Routes>
     </Router>
   )

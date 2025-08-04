@@ -17,6 +17,7 @@ const Templates = () => {
       recommended: true,
       atsFriendly: true,
       newTemplate: false,
+      link: "/build?template=template1",
     },
     {
       name: "Modern",
@@ -26,6 +27,7 @@ const Templates = () => {
       recommended: false,
       atsFriendly: true,
       newTemplate: false,
+      link: "/build?template=template2",
     },
     {
       name: "Creative",
@@ -35,6 +37,7 @@ const Templates = () => {
       recommended: false,
       atsFriendly: false,
       newTemplate: true,
+      link: "/build?template=template3",
     },
     {
       name: "Executive",
@@ -44,6 +47,7 @@ const Templates = () => {
       recommended: false,
       atsFriendly: true,
       newTemplate: false,
+      link: "/build?template=template4",
     },
     {
       name: "Academic",
@@ -53,6 +57,7 @@ const Templates = () => {
       recommended: false,
       atsFriendly: true,
       newTemplate: true,
+      link: "/build?template=template5",
     },
     {
       name: "Tech",
@@ -62,6 +67,7 @@ const Templates = () => {
       recommended: false,
       atsFriendly: true,
       newTemplate: false,
+      link: "/build?template=template6",
     },
   ];
 
@@ -90,12 +96,12 @@ const Templates = () => {
           </div>
         </div>
         <div className="flex items-center space-x-2 mr-6 text-sm"> 
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">All</button>
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Professional</button>
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Minimalist</button>
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">ATS-friendly</button>
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Formal</button>
-            <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Corporate</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">All</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Professional</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Minimalist</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">ATS-friendly</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Formal</button>
+          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Corporate</button>
         </div>
       </div>
       <div className="container mx-auto px-4">
@@ -110,6 +116,7 @@ const Templates = () => {
               recommended={template.recommended}
               atsFriendly={template.atsFriendly}
               newTemplate={template.newTemplate}
+              link={template.link}
             />
           ))}
         </div>

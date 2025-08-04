@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
-import template1 from '../assets/template1.png';
+import PropTypes from "prop-types";
+import template1 from "../assets/template1.png";
+import { Link } from "react-router-dom"; 
 
 const TemplateCard = ({
   name = "Default Template",
@@ -9,16 +10,17 @@ const TemplateCard = ({
   recommended = false,
   atsFriendly = false,
   newTemplate = false,
+  link = "/",
 }) => {
   return (
-    <div className="w-[400px] h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-xl ">
+    <div className="w-[400px] h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
       <div>
         <div className="relative mb-4">
           <img
             src={imageSrc}
             alt={`${name} Template`}
             className="w-full h-48 object-cover rounded border-b-1 border-gray-100 shadow-sm"
-            loading="lazy" 
+            loading="lazy"
           />
           <div className="flex items-center mt-4 flex-wrap gap-1">
             {recommended && (
@@ -48,12 +50,12 @@ const TemplateCard = ({
           ))}
         </div>
       </div>
-      <button
-        className="w-full mt-4 mb-1 cursor-pointer bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors disabled:bg-gray-400"
-        disabled={!name || !description}
+      <Link
+        to={link}
+        className="w-full mt-4 mb-1 bg-blue-500 text-white py-2 rounded text-center hover:bg-blue-600 transition-colors"
       >
         Use Template
-      </button>
+      </Link>
     </div>
   );
 };
@@ -66,7 +68,7 @@ TemplateCard.propTypes = {
   recommended: PropTypes.bool,
   atsFriendly: PropTypes.bool,
   newTemplate: PropTypes.bool,
+  link: PropTypes.string, // New prop for routing
 };
 
 export default TemplateCard;
-

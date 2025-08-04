@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   User,
@@ -12,11 +13,14 @@ import {
   Plus,
   Trash2,
   Award,
-  Scroll
+  Scroll,
+  Download,
 } from "lucide-react";
+import { useSearchParams } from "react-router-dom"; // Import useSearchParams
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ResumeTemplate1 from "../templates/ResumeTemplate1";
+import ResumeTemplate2 from "../templates/ResumeTemplate2"; // Import other templates as needed
 
 const steps = [
   { id: 1, name: "Personal Info", icon: User },
@@ -31,18 +35,11 @@ const steps = [
 
 const months = [
   "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "July", "August", "September", "October", "November", "December",
 ];
 
-const InputField = ({
-  label,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  required = false,
-  error = false,
-}) => (
+// Reusable components (InputField, SelectField, TextArea, SectionHeader) remain unchanged
+const InputField = ({ label, type = "text", placeholder, value, onChange, required = false, error = false }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
       {label} {required && <span className="text-red-500">*</span>}
@@ -83,6 +80,7 @@ const SelectField = ({
   placeholder,
   required = false,
   error = false,
+  disabled = false,
 }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
@@ -91,8 +89,9 @@ const SelectField = ({
     <select
       value={value ?? ""}
       onChange={onChange}
-      className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+      className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
       required={required}
+      disabled={disabled}
     >
       <option value="" disabled>{placeholder}</option>
       {options.map((option) => (
@@ -111,11 +110,13 @@ SelectField.propTypes = {
   placeholder: PropTypes.string.isRequired,
   required: PropTypes.bool,
   error: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 SelectField.defaultProps = {
   required: false,
   error: false,
+  disabled: false,
 };
 
 const TextArea = ({ label, placeholder, value, onChange, rows = 4, required = false, error = false }) => (
@@ -187,6 +188,16 @@ const ResumeBuilder = () => {
   const [collapsedSections, setCollapsedSections] = useState({});
   const [showPreview, setShowPreview] = useState(false);
   const [errors, setErrors] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams(); // Get URL parameters
+  const [selectedTemplate, setSelectedTemplate] = useState("template1"); // Default to template1
+
+  // Detect template from URL on mount
+  useEffect(() => {
+    const template = searchParams.get("template");
+    if (template) {
+      setSelectedTemplate(template);
+    }
+  }, [searchParams]);
 
   const [personalInfo, setPersonalInfo] = useState({
     firstName: "",
@@ -217,6 +228,7 @@ const ResumeBuilder = () => {
       endMonth: "",
       endYear: "",
       gpa: "",
+      current: false,
     },
   ]);
 
@@ -265,6 +277,7 @@ const ResumeBuilder = () => {
         endMonth: "",
         endYear: "",
         gpa: "",
+        current: false,
       },
     ]);
   };
@@ -361,6 +374,8 @@ const ResumeBuilder = () => {
     education.forEach((edu) => {
       if (edu.school.trim() && !edu.degree.trim()) newErrors[`education-${edu.id}-degree`] = true;
       if (edu.degree.trim() && !edu.school.trim()) newErrors[`education-${edu.id}-school`] = true;
+      if (!edu.current && edu.endMonth.trim() && !edu.endYear.trim()) newErrors[`education-${edu.id}-endYear`] = true;
+      if (!edu.current && !edu.endMonth.trim() && edu.endYear.trim()) newErrors[`education-${edu.id}-endMonth`] = true;
     });
     if (!hasValidEducation) {
       if (education.length === 0 || !education[0].school.trim()) newErrors[`education-${education[0].id}-school`] = true;
@@ -380,12 +395,12 @@ const ResumeBuilder = () => {
       const formattedEducation = education.map((edu) => ({
         ...edu,
         startDate: edu.startMonth && edu.startYear ? `${edu.startMonth} ${edu.startYear}` : "",
-        endDate: edu.endMonth && edu.endYear ? `${edu.endMonth} ${edu.endYear}` : "",
+        endDate: edu.current ? "Present" : (edu.endMonth && edu.endYear ? `${edu.endMonth} ${edu.endYear}` : ""),
       }));
       const formattedExperience = experience.map((exp) => ({
         ...exp,
         startDate: exp.startMonth && exp.startYear ? `${exp.startMonth} ${exp.startYear}` : "",
-        endDate: exp.current ? "" : (exp.endMonth && exp.endYear ? `${exp.endMonth} ${exp.endYear}` : ""),
+        endDate: exp.current ? "Present" : (exp.endMonth && exp.endYear ? `${exp.endMonth} ${exp.endYear}` : ""),
       }));
       const formattedProjects = projects.map((proj) => ({
         ...proj,
@@ -399,6 +414,21 @@ const ResumeBuilder = () => {
       setProjects(formattedProjects);
     }
   };
+
+  // Dynamically select the template component
+  const getTemplateComponent = () => {
+    const templateMap = {
+      template1: ResumeTemplate1,
+      template2: ResumeTemplate2,
+      template3: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
+      template4: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
+      template5: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
+      template6: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
+    };
+    return templateMap[selectedTemplate] || ResumeTemplate1; // Default to ResumeTemplate1
+  };
+
+  const TemplateComponent = getTemplateComponent();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -556,7 +586,6 @@ const ResumeBuilder = () => {
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     rows={4}
-                    required
                     error={errors.summary}
                   />
                 </div>
@@ -655,29 +684,50 @@ const ResumeBuilder = () => {
                             error={errors[`education-${edu.id}-startYear`]}
                           />
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <SelectField
-                            label="End Month"
-                            placeholder="Select month"
-                            value={edu.endMonth}
-                            onChange={(e) =>
-                              updateEducation(edu.id, "endMonth", e.target.value)
-                            }
-                            options={months}
-                            error={errors[`education-${edu.id}-endMonth`]}
-                          />
-                          <InputField
-                            label="End Year"
-                            type="number"
-                            placeholder="2023"
-                            value={edu.endYear}
-                            onChange={(e) =>
-                              updateEducation(edu.id, "endYear", e.target.value)
-                            }
-                            min="1900"
-                            max="2030"
-                            error={errors[`education-${edu.id}-endYear`]}
-                          />
+                        <div className="space-y-1">
+                          <div className="grid grid-cols-2 gap-2">
+                            <SelectField
+                              label="End Month"
+                              placeholder="Select month"
+                              value={edu.endMonth}
+                              onChange={(e) =>
+                                updateEducation(edu.id, "endMonth", e.target.value)
+                              }
+                              options={months}
+                              disabled={edu.current}
+                              error={errors[`education-${edu.id}-endMonth`]}
+                            />
+                            <InputField
+                              label="End Year"
+                              type="number"
+                              placeholder="2023"
+                              value={edu.endYear}
+                              onChange={(e) =>
+                                updateEducation(edu.id, "endYear", e.target.value)
+                              }
+                              min="1900"
+                              max="2030"
+                              disabled={edu.current}
+                              error={errors[`education-${edu.id}-endYear`]}
+                            />
+                          </div>
+                          <label className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={edu.current}
+                              onChange={(e) =>
+                                updateEducation(
+                                  edu.id,
+                                  "current",
+                                  e.target.checked
+                                )
+                              }
+                              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="text-sm text-gray-600">
+                              Ongoing/Present
+                            </span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -1046,13 +1096,22 @@ const ResumeBuilder = () => {
         </div>
       ) : (
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <button
-            onClick={() => setShowPreview(false)}
-            className="cursor-pointer mb-4 px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
-          >
-            Back to Editor
-          </button>
-          <ResumeTemplate1
+          <div className="flex space-x-4 mb-4">
+            <button
+              onClick={() => setShowPreview(false)}
+              className="cursor-pointer px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
+            >
+              Back to Editor
+            </button>
+            <button
+              onClick={() => document.getElementById('download-pdf').click()}
+              className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-lg"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download as PDF</span>
+            </button>
+          </div>
+          <TemplateComponent // Dynamically render the selected template
             personalInfo={personalInfo}
             summary={summary}
             education={education}
