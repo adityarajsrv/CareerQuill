@@ -42,7 +42,6 @@ const InputField = ({
   onChange,
   required = false,
   error = false,
-  ...props
 }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
@@ -55,13 +54,8 @@ const InputField = ({
       onChange={onChange}
       className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       required={required}
-      {...props}
     />
-    {error && (
-      <p className="text-xs text-red-500 mt-1">
-        {type === "email" ? "Please enter a valid email address" : type === "number" ? "Please enter a valid year (e.g., 2023)" : "This field is required"}
-      </p>
-    )}
+    {error && <p className="text-xs text-red-500 mt-1">This field is required</p>}
   </div>
 );
 
@@ -105,9 +99,7 @@ const SelectField = ({
         <option key={option} value={option}>{option}</option>
       ))}
     </select>
-    {error && (
-      <p className="text-xs text-red-500 mt-1">Please select a month</p>
-    )}
+    {error && <p className="text-xs text-red-500 mt-1">Please select a month</p>}
   </div>
 );
 
@@ -139,9 +131,7 @@ const TextArea = ({ label, placeholder, value, onChange, rows = 4, required = fa
       className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical`}
       required={required}
     />
-    {error && (
-      <p className="text-xs text-red-500 mt-1">This field is required</p>
-    )}
+    {error && <p className="text-xs text-red-500 mt-1">This field is required</p>}
   </div>
 );
 
@@ -282,12 +272,6 @@ const ResumeBuilder = () => {
   const removeEducation = (id) => {
     if (education.length > 1) {
       setEducation(education.filter((edu) => edu.id !== id));
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[`education-${id}-school`];
-        delete newErrors[`education-${id}-degree`];
-        return newErrors;
-      });
     }
   };
 
@@ -295,11 +279,6 @@ const ResumeBuilder = () => {
     setEducation(
       education.map((edu) => (edu.id === id ? { ...edu, [field]: value } : edu))
     );
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[`education-${id}-${field}`];
-      return newErrors;
-    });
   };
 
   const addExperience = () => {
@@ -322,12 +301,6 @@ const ResumeBuilder = () => {
   const removeExperience = (id) => {
     if (experience.length > 1) {
       setExperience(experience.filter((exp) => exp.id !== id));
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[`experience-${id}-company`];
-        delete newErrors[`experience-${id}-position`];
-        return newErrors;
-      });
     }
   };
 
@@ -337,11 +310,6 @@ const ResumeBuilder = () => {
         exp.id === id ? { ...exp, [field]: value } : exp
       )
     );
-    setErrors((prev) => {
-      const newErrors = { ...prev };
-      delete newErrors[`experience-${id}-${field}`];
-      return newErrors;
-    });
   };
 
   const addProject = () => {
@@ -379,95 +347,28 @@ const ResumeBuilder = () => {
     const newErrors = {};
 
     // Personal Info Validation
-    if (!personalInfo.firstName.trim()) {
-      newErrors.firstName = true;
-    }
-    if (!personalInfo.lastName.trim()) {
-      newErrors.lastName = true;
-    }
+    if (!personalInfo.firstName.trim()) newErrors.firstName = true;
+    if (!personalInfo.lastName.trim()) newErrors.lastName = true;
     if (!personalInfo.email.trim() && !personalInfo.phone.trim()) {
       newErrors.email = true;
       newErrors.phone = true;
-    }
-    if (personalInfo.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
+    } else if (personalInfo.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
       newErrors.email = true;
     }
 
     // Education Validation
     const hasValidEducation = education.some((edu) => edu.school.trim() && edu.degree.trim());
     education.forEach((edu) => {
-      if (edu.school.trim() && !edu.degree.trim()) {
-        newErrors[`education-${edu.id}-degree`] = true;
-      }
-      if (edu.degree.trim() && !edu.school.trim()) {
-        newErrors[`education-${edu.id}-school`] = true;
-      }
-      if ((edu.startMonth || edu.startYear) && (!edu.startMonth || !edu.startYear)) {
-        if (!edu.startMonth) newErrors[`education-${edu.id}-startMonth`] = true;
-        if (!edu.startYear) newErrors[`education-${edu.id}-startYear`] = true;
-      }
-      if ((edu.endMonth || edu.endYear) && (!edu.endMonth || !edu.endYear)) {
-        if (!edu.endMonth) newErrors[`education-${edu.id}-endMonth`] = true;
-        if (!edu.endYear) newErrors[`education-${edu.id}-endYear`] = true;
-      }
-      if (edu.startYear && (edu.startYear < 1900 || edu.startYear > 2030)) {
-        newErrors[`education-${edu.id}-startYear`] = true;
-      }
-      if (edu.endYear && (edu.endYear < 1900 || edu.endYear > 2030)) {
-        newErrors[`education-${edu.id}-endYear`] = true;
-      }
+      if (edu.school.trim() && !edu.degree.trim()) newErrors[`education-${edu.id}-degree`] = true;
+      if (edu.degree.trim() && !edu.school.trim()) newErrors[`education-${edu.id}-school`] = true;
     });
     if (!hasValidEducation) {
-      newErrors[`education-${education[0].id}-school`] = true;
-      newErrors[`education-${education[0].id}-degree`] = true;
+      if (education.length === 0 || !education[0].school.trim()) newErrors[`education-${education[0].id}-school`] = true;
+      if (education.length === 0 || !education[0].degree.trim()) newErrors[`education-${education[0].id}-degree`] = true;
     }
-
-    // Experience Validation (non-mandatory)
-    experience.forEach((exp) => {
-      if (exp.company.trim() && !exp.position.trim()) {
-        newErrors[`experience-${exp.id}-position`] = true;
-      }
-      if (exp.position.trim() && !exp.company.trim()) {
-        newErrors[`experience-${exp.id}-company`] = true;
-      }
-      if ((exp.startMonth || exp.startYear) && (!exp.startMonth || !exp.startYear)) {
-        if (!exp.startMonth) newErrors[`experience-${exp.id}-startMonth`] = true;
-        if (!exp.startYear) newErrors[`experience-${exp.id}-startYear`] = true;
-      }
-      if (!exp.current && (exp.endMonth || exp.endYear) && (!exp.endMonth || !exp.endYear)) {
-        if (!exp.endMonth) newErrors[`experience-${exp.id}-endMonth`] = true;
-        if (!exp.endYear) newErrors[`experience-${exp.id}-endYear`] = true;
-      }
-      if (exp.startYear && (exp.startYear < 1900 || exp.startYear > 2030)) {
-        newErrors[`experience-${exp.id}-startYear`] = true;
-      }
-      if (exp.endYear && (exp.endYear < 1900 || exp.endYear > 2030)) {
-        newErrors[`experience-${exp.id}-endYear`] = true;
-      }
-    });
-
-    // Projects Validation
-    projects.forEach((proj) => {
-      if ((proj.startMonth || proj.startYear) && (!proj.startMonth || !proj.startYear)) {
-        if (!proj.startMonth) newErrors[`project-${proj.id}-startMonth`] = true;
-        if (!proj.startYear) newErrors[`project-${proj.id}-startYear`] = true;
-      }
-      if ((proj.endMonth || proj.endYear) && (!proj.endMonth || !proj.endYear)) {
-        if (!proj.endMonth) newErrors[`project-${proj.id}-endMonth`] = true;
-        if (!proj.endYear) newErrors[`project-${proj.id}-endYear`] = true;
-      }
-      if (proj.startYear && (proj.startYear < 1900 || proj.startYear > 2030)) {
-        newErrors[`project-${proj.id}-startYear`] = true;
-      }
-      if (proj.endYear && (proj.endYear < 1900 || proj.endYear > 2030)) {
-        newErrors[`project-${proj.id}-endYear`] = true;
-      }
-    });
 
     // Skills Validation
-    if (!skills.trim()) {
-      newErrors.skills = true;
-    }
+    if (!skills.trim()) newErrors.skills = true;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -475,7 +376,7 @@ const ResumeBuilder = () => {
 
   const handleGenerateResume = () => {
     if (validateForm()) {
-      // Convert month/year to "Month YYYY" format for ResumeTemplate1
+      // Format dates to "Month Year"
       const formattedEducation = education.map((edu) => ({
         ...edu,
         startDate: edu.startMonth && edu.startYear ? `${edu.startMonth} ${edu.startYear}` : "",
@@ -493,7 +394,6 @@ const ResumeBuilder = () => {
       }));
 
       setShowPreview(true);
-      // Pass formatted data to ResumeTemplate1
       setEducation(formattedEducation);
       setExperience(formattedExperience);
       setProjects(formattedProjects);
@@ -567,7 +467,7 @@ const ResumeBuilder = () => {
                           email: e.target.value,
                         })
                       }
-                      required={personalInfo.phone.trim() === ""}
+                      required
                       error={errors.email}
                     />
                     <InputField
@@ -581,7 +481,7 @@ const ResumeBuilder = () => {
                           phone: e.target.value,
                         })
                       }
-                      required={personalInfo.email.trim() === ""}
+                      required
                       error={errors.phone}
                     />
                     <InputField
@@ -615,20 +515,7 @@ const ResumeBuilder = () => {
                       }
                     />
                     <InputField
-                      label="Zip Code"
-                      type="text"
-                      placeholder="10001"
-                      value={personalInfo.zipCode}
-                      onChange={(e) =>
-                        setPersonalInfo({
-                          ...personalInfo,
-                          zipCode: e.target.value,
-                        })
-                      }
-                    />
-                    <InputField
                       label="LinkedIn Profile"
-                      type="url"
                       placeholder="https://www.linkedin.com/in/yourprofile"
                       value={personalInfo.linkedin || ""}
                       onChange={(e) =>
@@ -640,7 +527,6 @@ const ResumeBuilder = () => {
                     />
                     <InputField
                       label="GitHub Profile"
-                      type="url"
                       placeholder="https://github.com/yourusername"
                       value={personalInfo.github || ""}
                       onChange={(e) =>
@@ -651,9 +537,6 @@ const ResumeBuilder = () => {
                       }
                     />
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Tip: Provide at least one contact method (email or phone).
-                  </p>
                 </div>
               )}
             </div>
@@ -669,10 +552,12 @@ const ResumeBuilder = () => {
                 <div className="p-6 border-t border-gray-200">
                   <TextArea
                     label="Professional Summary"
-                    placeholder="Write a brief summary of your professional background, key skills, and career objectives (optional)..."
+                    placeholder="Write a brief summary of your professional background, key skills, and career objectives..."
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     rows={4}
+                    required
+                    error={errors.summary}
                   />
                 </div>
               )}
@@ -753,24 +638,26 @@ const ResumeBuilder = () => {
                               updateEducation(edu.id, "startMonth", e.target.value)
                             }
                             options={months}
+                            required
                             error={errors[`education-${edu.id}-startMonth`]}
                           />
                           <InputField
                             label="Start Year"
                             type="number"
-                            placeholder="2020"
+                            placeholder="2023"
                             value={edu.startYear}
                             onChange={(e) =>
                               updateEducation(edu.id, "startYear", e.target.value)
                             }
                             min="1900"
                             max="2030"
+                            required
                             error={errors[`education-${edu.id}-startYear`]}
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <SelectField
-                            label="End Month (or Expected)"
+                            label="End Month"
                             placeholder="Select month"
                             value={edu.endMonth}
                             onChange={(e) =>
@@ -780,7 +667,7 @@ const ResumeBuilder = () => {
                             error={errors[`education-${edu.id}-endMonth`]}
                           />
                           <InputField
-                            label="End Year (or Expected)"
+                            label="End Year"
                             type="number"
                             placeholder="2023"
                             value={edu.endYear}
@@ -843,8 +730,6 @@ const ResumeBuilder = () => {
                           onChange={(e) =>
                             updateExperience(exp.id, "company", e.target.value)
                           }
-                          required={false}
-                          error={errors[`experience-${exp.id}-company`]}
                         />
                         <InputField
                           label="Position"
@@ -853,8 +738,6 @@ const ResumeBuilder = () => {
                           onChange={(e) =>
                             updateExperience(exp.id, "position", e.target.value)
                           }
-                          required={false}
-                          error={errors[`experience-${exp.id}-position`]}
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <SelectField
@@ -865,25 +748,23 @@ const ResumeBuilder = () => {
                               updateExperience(exp.id, "startMonth", e.target.value)
                             }
                             options={months}
-                            error={errors[`experience-${exp.id}-startMonth`]}
                           />
                           <InputField
                             label="Start Year"
                             type="number"
-                            placeholder="2020"
+                            placeholder="2023"
                             value={exp.startYear}
                             onChange={(e) =>
                               updateExperience(exp.id, "startYear", e.target.value)
                             }
                             min="1900"
                             max="2030"
-                            error={errors[`experience-${exp.id}-startYear`]}
                           />
                         </div>
                         <div className="space-y-1">
                           <div className="grid grid-cols-2 gap-2">
                             <SelectField
-                              label="End Month (Optional)"
+                              label="End Month"
                               placeholder="Select month"
                               value={exp.endMonth}
                               onChange={(e) =>
@@ -891,10 +772,9 @@ const ResumeBuilder = () => {
                               }
                               options={months}
                               disabled={exp.current}
-                              error={errors[`experience-${exp.id}-endMonth`]}
                             />
                             <InputField
-                              label="End Year (Optional)"
+                              label="End Year"
                               type="number"
                               placeholder="2023"
                               value={exp.endYear}
@@ -904,7 +784,6 @@ const ResumeBuilder = () => {
                               min="1900"
                               max="2030"
                               disabled={exp.current}
-                              error={errors[`experience-${exp.id}-endYear`]}
                             />
                           </div>
                           <label className="flex items-center space-x-2">
@@ -928,7 +807,7 @@ const ResumeBuilder = () => {
                       </div>
                       <div className="mt-4">
                         <TextArea
-                          label="Job Description (Optional)"
+                          label="Job Description"
                           placeholder="Describe your responsibilities, achievements, and impact in this role..."
                           value={exp.description}
                           onChange={(e) =>
@@ -965,18 +844,15 @@ const ResumeBuilder = () => {
                 <div className="p-6 border-t border-gray-200">
                   <TextArea
                     label="Skills"
-                    placeholder="List your technical and soft skills (e.g., JavaScript, Teamwork, React, Problem Solving)..."
+                    placeholder="List your technical skills, programming languages, frameworks, tools, etc. Separate with commas or use bullet points..."
                     value={skills}
-                    onChange={(e) => {
-                      setSkills(e.target.value);
-                      setErrors((prev) => ({ ...prev, skills: false }));
-                    }}
+                    onChange={(e) => setSkills(e.target.value)}
                     rows={4}
                     required
                     error={errors.skills}
                   />
                   <p className="text-sm text-gray-500 mt-2">
-                    Tip: Separate skills with commas or bullet points (e.g., - JavaScript, - Teamwork).
+                    Tip: Use the format: Category: Skill1, Skill2, Skill3 (e.g., Languages: Java, Python).
                   </p>
                 </div>
               )}
@@ -1021,8 +897,7 @@ const ResumeBuilder = () => {
                           }
                         />
                         <InputField
-                          label="Project URL"
-                          type="url"
+                          label="Project URL (Optional)"
                           placeholder="https://github.com/username/project"
                           value={project.url}
                           onChange={(e) =>
@@ -1040,8 +915,7 @@ const ResumeBuilder = () => {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm break-words focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 md:col-span-2 min-h-[38px]"
-                          error={false}
+                          className="md:col-span-2"
                         />
                         <div className="grid grid-cols-2 gap-2">
                           <SelectField
@@ -1052,34 +926,31 @@ const ResumeBuilder = () => {
                               updateProject(project.id, "startMonth", e.target.value)
                             }
                             options={months}
-                            error={errors[`project-${project.id}-startMonth`]}
                           />
                           <InputField
                             label="Start Year"
                             type="number"
-                            placeholder="2020"
+                            placeholder="2023"
                             value={project.startYear}
                             onChange={(e) =>
                               updateProject(project.id, "startYear", e.target.value)
                             }
                             min="1900"
                             max="2030"
-                            error={errors[`project-${project.id}-startYear`]}
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <SelectField
-                            label="End Month (or Expected)"
+                            label="End Month"
                             placeholder="Select month"
                             value={project.endMonth}
                             onChange={(e) =>
                               updateProject(project.id, "endMonth", e.target.value)
                             }
                             options={months}
-                            error={errors[`project-${project.id}-endMonth`]}
                           />
                           <InputField
-                            label="End Year (or Expected)"
+                            label="End Year"
                             type="number"
                             placeholder="2023"
                             value={project.endYear}
@@ -1088,14 +959,13 @@ const ResumeBuilder = () => {
                             }
                             min="1900"
                             max="2030"
-                            error={errors[`project-${project.id}-endYear`]}
                           />
                         </div>
                       </div>
                       <div className="mt-4">
                         <TextArea
                           label="Project Description"
-                          placeholder="Describe the project, your role, key features, and achievements..."
+                          placeholder="Describe the project, your role, key features, and achievements. Use periods to separate points."
                           value={project.description}
                           onChange={(e) =>
                             updateProject(
@@ -1131,10 +1001,11 @@ const ResumeBuilder = () => {
                 <div className="p-6 border-t border-gray-200">
                   <TextArea
                     label="Achievements"
-                    placeholder="List your achievements (e.g., Won Hackathon, Published Research Paper)..."
+                    placeholder="List your achievements. Separate with commas or use bullet points..."
                     value={achievements}
                     onChange={(e) => setAchievements(e.target.value)}
                     rows={4}
+                    error={errors.achievements}
                   />
                 </div>
               )}
@@ -1151,10 +1022,11 @@ const ResumeBuilder = () => {
                 <div className="p-6 border-t border-gray-200">
                   <TextArea
                     label="Certifications"
-                    placeholder="List your certifications (e.g., AWS Certified Developer, PMP)..."
+                    placeholder="List your certifications. Separate with commas or use bullet points..."
                     value={certifications}
                     onChange={(e) => setCertifications(e.target.value)}
                     rows={4}
+                    error={errors.certifications}
                   />
                 </div>
               )}
@@ -1176,7 +1048,7 @@ const ResumeBuilder = () => {
         <div className="max-w-4xl mx-auto px-4 py-6">
           <button
             onClick={() => setShowPreview(false)}
-            className="mb-4 px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
+            className="cursor-pointer mb-4 px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
           >
             Back to Editor
           </button>
