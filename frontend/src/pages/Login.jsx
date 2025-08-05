@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { LockClosedIcon } from '@heroicons/react/24/outline';
 import loginUI from '../assets/loginUI.png'; 
+import api from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,13 +12,15 @@ const Login = () => {
     name: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError(''); 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setError('Please fill in all required fields.');
@@ -26,14 +30,33 @@ const Login = () => {
       setError('Name is required for signup.');
       return;
     }
-    console.log('Form submitted:', { ...formData, isLogin });
-    setFormData({ email: '', password: '', name: '' });
-    setError('');
+    try{
+      setLoading(true);
+      const endpoint = isLogin ? '/auth/login' : '/auth/register';
+      const payload = isLogin ? {
+        email: formData.email, password: formData.password
+      } : {
+        name: formData.name, email: formData.email, password: formData.password
+      }
+      
+      const response = await api.post(endpoint, payload);
+
+      if (response.data.user){
+        console.log('User logged in:', response.data.user);
+
+        navigate('/dashboard'); 
+      }
+    }catch(err){
+      const msg = err?.response?.data?.message || 'Something went wrong. Please try again.';
+      setError(msg);
+    }finally{
+      setLoading(false);
+      setFormData({email: '', password: '', name: ''});
+    }
   };
 
   return (
     <div className="min-h-screen p-6 sm:p-12 overflow-hidden bg-gradient-to-br from-gray-100 via-blue-50 to-gray-200">
-      {/* Subtle Background Overlay */}
       <div className="absolute inset-0 z-0 opacity-30">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')] bg-repeat mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 to-transparent" />
@@ -111,10 +134,11 @@ const Login = () => {
             {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             <button
               type="submit"
+              disabled={loading}
               className="cursor-pointer w-full flex items-center justify-center py-3 px-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
             >
               <LockClosedIcon className="h-6 w-6 mr-2" />
-              {isLogin ? 'Sign In' : 'Sign Up'}
+              {loading ? 'Processing' : isLogin ? 'Sign In' : 'Sign Up'}
             </button>
           </form>
 
