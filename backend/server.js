@@ -29,3 +29,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 }).catch((error) => {
     console.error('Database connection error:', error);
 })
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found', path: req.originalUrl });
+});

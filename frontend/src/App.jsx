@@ -7,6 +7,7 @@ import ResumeTemplate1 from "./templates/ResumeTemplate1";
 import ResumeTemplate2 from "./templates/ResumeTemplate2";
 import UserDashboard from "./pages/UserDashboard";
 import ProfilePage from "./pages/Profile";
+import PrivateRoute from "./routes/PrivateRoute";
 
 const App = () => {
   return (
@@ -22,7 +23,12 @@ const App = () => {
         <Route path = "/template4" element={<ResumeTemplate1 />} />
         <Route path = "/template5" element={<ResumeTemplate1 />} />
         <Route path = "/template6" element={<ResumeTemplate1 />} />
-        <Route path = "/dashboard" element={<UserDashboard />} />
+        <Route path = "/dashboard" element=
+        {
+          <PrivateRoute>
+            <UserDashboard />
+          </PrivateRoute>
+        }/>
         <Route path = "/profile" element={<ProfilePage />} />
       </Routes>
     </Router>

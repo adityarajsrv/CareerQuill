@@ -20,6 +20,21 @@ const userSchema = new model.Schema({
         required: [true, 'Password is required'],
         minlength: 8,
     },
+    phone: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    location: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    bio: {
+        type: String,
+        required: false,
+        trim: true,
+    },
 },{
     timestamps: true,
 })

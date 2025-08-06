@@ -4,14 +4,17 @@ import { FaPlus } from "react-icons/fa6";
 import { FiUpload } from "react-icons/fi";
 import { PiFilesLight } from "react-icons/pi";
 import { HiArrowTrendingUp } from "react-icons/hi2";
+import { useAuth } from "../context/AuthContext";
 
 const UserDashboard = () => {
+  const { user } = useAuth();
+
   return (
     <div className="bg-white min-h-screen">
       <UserNavbar />
       <div className="px-20 py-8">
         <h2 className="text-3xl font-bold tracking-tight">
-          Welcome back, UserName! 👋
+          Welcome back, {user?.name || "User"}! 👋
         </h2>
         <p className="mt-2 text-gray-700 text-xl">
           Let&apos;s build your dream resume!
