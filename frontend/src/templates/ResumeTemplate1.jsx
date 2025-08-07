@@ -186,7 +186,7 @@ const ResumeTemplate1 = ({
       <button id="download-pdf" onClick={downloadPDF} className="hidden" />
       <div
         id="resume-content"
-        className="max-w-2xl mx-auto p-4 bg-white shadow-md border border-gray-300 text-sm"
+        className="max-w-3xl mx-auto py-4 px-6 bg-white shadow-md border border-gray-300 text-sm"
       >
         <header className="text-center mb-4">
           <h1 className="text-md font-bold">
