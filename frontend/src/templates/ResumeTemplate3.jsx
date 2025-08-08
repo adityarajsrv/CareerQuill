@@ -3,16 +3,13 @@ const ResumeTemplate3 = () => {
     <div className="max-w-3xl mx-auto py-4 px-6 bg-white shadow-md border border-gray-300 text-sm">
       <h3 className="text-lg font-bold mb-1 text-blue-500">John Doe</h3>
       <div className="flex flex-row space-x-2 mb-2 text-gray-500">
-        <p>+91 7896542310 |</p>
-        <p>john.doe@example.com |</p>
-        <p>linkedin.com/johndoe |</p>
-        <p>github.com/johndoe</p>
+        <p>+1 (415) 555-9876 |</p>
+        <p>john.doe@outlook.com |</p>
+        <p>linkedin.com/in/johndoe-ml |</p>
+        <p>github.com/johndoe-dev</p>
       </div>
       <p className="mb-2 text-xs">
-        Proficient in Python (Pandas, NumPy), SQL, and end-to-end machine
-        learning and deep learning workflows using Scikit-learn, PyTorch, and
-        YOLOv8, with practical experience in data preprocessing, model
-        deployment, and real-time analytics.{" "}
+        Skilled Software Engineer with 5+ years of experience in machine learning and full-stack web development. Proficient in Python (Pandas, NumPy, Scikit-learn, PyTorch, YOLOv8), SQL, and React, with expertise in building scalable ML models, data pipelines, and responsive web applications. Passionate about leveraging data-driven insights to solve complex problems.
       </p>
       <div className="mb-3 text-gray-600">
         <h3 className="font-bold py-1 text-blue-500">Education</h3>
@@ -20,13 +17,13 @@ const ResumeTemplate3 = () => {
         <div className="mt-2">
           <div className="flex flex-row justify-between mb-0.5">
             <h4 className="font-semibold">
-              Indian Institute of Technology Bombay
+              Massachusetts Institute of Technology
             </h4>
-            <p>Jul 2013 - May 2017</p>
+            <p>Sep 2015 - May 2019</p>
           </div>
           <div className="flex flex-row justify-between">
-            <p>Bachelor of Technology in Computer Science</p>
-            <p>CGPA : 8.7</p>
+            <p>Bachelor of Science in Computer Science and Artificial Intelligence</p>
+            <p>GPA: 3.9/4.0</p>
           </div>
         </div>
       </div>
@@ -34,27 +31,27 @@ const ResumeTemplate3 = () => {
         <h3 className="font-bold py-1 text-blue-500">Work Experience</h3>
         <div className="h-0.25 w-full bg-black"></div>
         <div className="mt-2">
-          <h4 className="font-semibold">Software Engineer</h4>
+          <h4 className="font-semibold">Machine Learning Engineer</h4>
           <div className="flex flex-row justify-between">
-            <p className="text-gray-600">Tech Solutions Inc.</p>
-          <p>Jan 2020 - Present</p>
+            <p className="text-gray-600">DataWave Technologies</p>
+            <p>Jul 2020 - Present</p>
           </div>
           <ul className="list-disc pl-5 mt-1">
-            <li>Developed and maintained web applications using React and Node.js.</li>
-            <li>Collaborated with cross-functional teams to define, design, and ship new features.</li>
-            <li>Improved application performance by optimizing code and implementing best practices.</li>
+            <li>Developed and deployed end-to-end ML models using PyTorch and YOLOv8 for real-time object detection, improving system accuracy by 20%.</li>
+            <li>Built data pipelines with Pandas and SQL, processing 10TB+ datasets for predictive analytics.</li>
+            <li>Created interactive dashboards with Streamlit, enabling stakeholders to monitor KPIs in real-time.</li>
           </ul>
         </div>
         <div className="mt-4">
-          <h4 className="font-semibold">Junior Developer</h4>
+          <h4 className="font-semibold">Software Developer</h4>
           <div className="flex flex-row justify-between">
-            <p className="text-gray-600">Web Innovations Ltd.</p>
-            <p>Jun 2018 - Dec 2019</p>
+            <p className="text-gray-600">TechTrend Innovations</p>
+            <p>Jun 2018 - Jun 2020</p>
           </div>
           <ul className="list-disc pl-5 mt-1">
-            <li>Assisted in the development of client-side applications using HTML, CSS, and JavaScript.</li>
-            <li>Participated in code reviews and contributed to team knowledge sharing.</li>
-            <li>Resolved bugs and implemented enhancements based on user feedback.</li>
+            <li>Developed responsive web applications using React, Node.js, and MongoDB, enhancing user engagement by 30%.</li>
+            <li>Optimized backend APIs with Express, reducing latency by 15% through efficient query design.</li>
+            <li>Contributed to agile sprints, conducting code reviews and improving codebase quality.</li>
           </ul>
         </div>    
       </div>
@@ -63,20 +60,16 @@ const ResumeTemplate3 = () => {
         <div className="h-0.25 bg-black w-full"></div>
         <ul className="list-disc pl-5 mt-1">
           <li>
-            <span className="font-semibold">Frontend:</span> HTML, CSS,
-            JavaScript, React, Node.js
+            <span className="font-semibold">Frontend:</span> HTML, CSS, JavaScript, React, Tailwind CSS
           </li>
           <li>
-            <span className="font-semibold">Backend:</span> RESTful APIs, Git,
-            Agile Methodologies
+            <span className="font-semibold">Backend:</span> Node.js, Express, MongoDB, RESTful APIs
           </li>
           <li>
-            <span className="font-semibold">Tools and Technologies:</span>{" "}
-            Jupyter Notebook, VS Code, Git, Streamlit, PyCharm
+            <span className="font-semibold">Machine Learning:</span> Python, Pandas, NumPy, Scikit-learn, PyTorch, YOLOv8
           </li>
           <li>
-            <span className="font-semibold">Others:</span> Problem Solving, Team
-            Collaboration
+            <span className="font-semibold">Tools:</span> Jupyter Notebook, PyCharm, Git, Docker, AWS
           </li>
         </ul>
       </div>
@@ -85,41 +78,30 @@ const ResumeTemplate3 = () => {
         <div className="h-0.25 bg-black w-full"></div>
         <div>
           <div className="flex flex-row justify-items-start mb-0.5 space-x-1">
-            <h4 className="font-semibold">Portfolio Website |</h4>
-            <a href="" className="text-blue-500 text-style: underline">
+            <h4 className="font-semibold">Real-Time Object Detection System |</h4>
+            <a href="https://github.com/johndoe-dev/object-detection" className="text-blue-500 text-style: underline">
               Project Link
             </a>
           </div>
           <ul className="list-disc pl-5 mt-1">
-            <li>
-              Developed a personal portfolio website to showcase projects and
-              skills using React and Tailwind CSS.
-            </li>
-            <li>
-              Made the website responsive across various different browsers.
-            </li>
+            <li>Built a real-time object detection system using YOLOv8 and PyTorch, achieving 85% accuracy on custom datasets.</li>
+            <li>Deployed model on AWS EC2 with Streamlit for live demo, optimizing inference speed by 25%.</li>
           </ul>
         </div>
         <div className="mt-4">
           <div className="flex flex-row justify-items-start mb-0.5 space-x-1">
-            <h4 className="font-semibold">E-commerce Application |</h4>
-            <a href="" className="text-blue-500 text-style: underline">
+            <h4 className="font-semibold">E-commerce Web Application |</h4>
+            <a href="https://github.com/johndoe-dev/ecommerce" className="text-blue-500 text-style: underline">
               Project Link
               <span className="text-gray-600 font-semibold"> |</span>
             </a>
-            <a href="" className="text-blue-500 text-style: underline">
+            <a href="https://ecommerce.johndoe.dev" className="text-blue-500 text-style: underline">
               Live Deployment
             </a>
           </div>
           <ul className="list-disc pl-5 mt-1">
-            <li>
-              Built a full-stack e-commerce application with Node.js, Express,
-              and MongoDB.
-            </li>
-            <li>
-              Implemented user authentication, product management, and payment
-              processing.
-            </li>
+            <li>Developed a full-stack e-commerce platform with React, Node.js, Express, and MongoDB.</li>
+            <li>Implemented JWT-based authentication and Stripe payment integration for secure transactions.</li>
           </ul>
         </div>
       </div>
@@ -127,24 +109,17 @@ const ResumeTemplate3 = () => {
         <h3 className="font-bold py-1 text-blue-500">Certifications</h3>
         <div className="h-0.25 bg-black w-full"></div>
         <ul className="list-disc pl-5 mt-1">
-          <li>Certified JavaScript Developer</li>
-          <li>React Professional Certification</li>
-          <li>Node.js Fundamentals</li>
+          <li>Deep Learning Specialization (Coursera)</li>
+          <li>AWS Certified Machine Learning – Specialty</li>
+          <li>Meta Front-End Developer Professional Certificate</li>
         </ul>
       </div>
       <div className="mb-3 text-gray-600">
         <h3 className="font-bold py-1 text-blue-500">Achievements</h3>
         <div className="h-0.25 bg-black w-full"></div>
         <ul className="list-disc pl-5 mt-1">
-          <li>
-            Secured All India Rank 252 in the National Defense Academy (NDA)
-            written examination, demonstrating strong aptitude, discipline, and
-            national-level competitive excellence.{" "}
-          </li>
-          <li>
-            Solved 100+ Data Structures & Algorithms problems on LeetCode and
-            GeeksForGeeks.{" "}
-          </li>
+          <li>Ranked in top 1% globally on Kaggle for image classification competition (2022).</li>
+          <li>Solved 150+ problems on LeetCode, specializing in algorithms and data structures.</li>
         </ul>
       </div>
     </div>
