@@ -43,9 +43,16 @@ const Hero = () => {
               Build My Resume
             </button>
           </Link>
+
           <Link to="/templates">
             <button className="px-5 py-2 bg-gray-100 text-black border rounded-lg cursor-pointer hover:bg-gray-300 hover:border-none border-gray-200">
               View Templates
+            </button>
+          </Link>
+
+          <Link to="/ats_score">
+            <button className="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white border border-blue-300 cursor-pointer rounded-lg shadow hover:from-blue-600 hover:to-blue-500 transition">
+              Check ATS Score
             </button>
           </Link>
         </div>

@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 .env
+
+ATS_scoring_roadmap.txt

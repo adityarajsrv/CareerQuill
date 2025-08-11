@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
+const pdfRoutes = require('./routes/pdfRoutes');
 
 const app = express();
 
@@ -30,6 +31,9 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.error('Database connection error:', error);
 })
 
+app.use('/api/pdf', pdfRoutes)
+
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found', path: req.originalUrl });
 });
+

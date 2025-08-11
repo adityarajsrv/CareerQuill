@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+
+# Node modules
+node_modules/
+
+# Env files
+.env
+
+# Large datasets
+*.csv
+*.zip
+datasets/
