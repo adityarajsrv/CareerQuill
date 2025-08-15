@@ -1,0 +1,29 @@
+{
+  "programming_languages": [
+    "Python", "JavaScript", "TypeScript", "Java", "C#", "C++", "Go", "Rust", "Kotlin", "Swift", "PHP", "Ruby", "Scala", "R", "MATLAB", "Perl", "Shell Scripting", "Objective-C", "Groovy", "Dart", "Haskell", "Elixir", "Visual Basic", "Assembly Language", "Bash", "PowerShell", "PL/SQL", "Fortran", "COBOL", "Erlang"
+  ],
+  "frameworks_and_libraries": [
+    "React", "Vue.js", "Angular", "Next.js", "Nuxt.js", "Svelte", "Django", "Flask", "FastAPI", "Express.js", "Spring Boot", "ASP.NET", "ASP.NET Core", "Laravel", "Symfony", "CodeIgniter", "React Native", "Flutter", "SwiftUI", "Ionic", "Xamarin", "Bootstrap", "Tailwind CSS", "Material-UI", "Ant Design", "Redux", "MobX", "RxJS", "jQuery", "Backbone.js", "Ember.js", "Three.js", "Chart.js", "TensorFlow.js", "Pandas", "NumPy", "Matplotlib", "Seaborn", "Plotly", "Bokeh", "D3.js"
+  ],
+  "data_engineering_and_analytics": [
+    "SQL", "MySQL", "PostgreSQL", "MongoDB", "SQLite", "Redis", "Cassandra", "Snowflake", "BigQuery", "Redshift", "MariaDB", "Oracle Database", "Amazon Aurora", "CockroachDB", "Neo4j", "TimescaleDB", "Elasticsearch", "Power BI", "Tableau", "Looker", "QlikView", "dbt", "Apache Spark", "Hadoop", "Kafka", "Airflow", "Presto", "Hive", "Pig", "Flink", "Beam", "ETL", "Data Warehousing", "Data Lake", "OLAP", "OLTP"
+  ],
+  "machine_learning_and_ai": [
+    "TensorFlow", "PyTorch", "Keras", "scikit-learn", "LightGBM", "XGBoost", "CatBoost", "Hugging Face", "Transformers", "OpenCV", "YOLO", "MediaPipe", "MLflow", "AutoML", "Deep Learning", "Neural Networks", "Convolutional Neural Networks", "Recurrent Neural Networks", "LSTM", "GANs", "Reinforcement Learning", "Natural Language Processing", "Computer Vision", "Speech Recognition", "Text Mining", "Feature Engineering", "Model Deployment", "A/B Testing", "MLOps"
+  ],
+  "cloud_and_devops": [
+    "AWS", "Azure", "GCP", "Serverless", "Kubernetes", "Docker", "Terraform", "Ansible", "Jenkins", "CircleCI", "Travis CI", "GitHub Actions", "Bitbucket Pipelines", "TeamCity", "Prometheus", "Grafana", "ELK Stack", "Datadog", "New Relic", "CloudFormation", "Pulumi", "Chef", "SaltStack", "Nomad", "Istio", "Linkerd", "Sentry", "PagerDuty", "AWS Lambda", "Cloud Run", "App Engine", "EC2", "S3", "EKS", "RDS"
+  ],
+  "developer_tools": [
+    "Git", "GitHub", "GitLab", "Bitbucket", "VS Code", "Visual Studio", "PyCharm", "IntelliJ IDEA", "Eclipse", "NetBeans", "Android Studio", "Xcode", "Postman", "Swagger", "Fiddler", "Chrome DevTools", "WebStorm", "PhpStorm", "RStudio", "Jupyter Notebook", "Colab", "Sublime Text", "Atom", "Notepad++", "Vim", "Emacs", "Spyder"
+  ],
+  "design_and_creative": [
+    "Figma", "Adobe XD", "Sketch", "InVision", "Canva", "Photoshop", "Illustrator", "After Effects", "Premiere Pro", "Lightroom", "Indesign", "UI/UX Design", "Wireframing", "Prototyping", "Interaction Design", "Responsive Design", "Information Architecture", "Usability Testing", "Design Systems", "Storyboarding", "Motion Graphics"
+  ],
+  "business_and_marketing": [
+    "Salesforce", "HubSpot", "Zoho CRM", "Microsoft Dynamics", "Pipedrive", "Freshsales", "Google Analytics", "Google Ads", "Facebook Ads", "LinkedIn Ads", "Twitter Ads", "Instagram Ads", "SEMrush", "Ahrefs", "Moz", "Mailchimp", "Klaviyo", "Marketo", "Pardot", "ActiveCampaign", "Drip", "Campaign Monitor", "SEO", "SEM", "PPC", "Content Marketing", "Email Marketing", "Social Media Marketing", "Influencer Marketing", "A/B Testing", "Conversion Rate Optimization", "Customer Relationship Management"
+  ],
+  "soft_skills": [
+    "Communication", "Leadership", "Problem Solving", "Critical Thinking", "Analytical Thinking", "Adaptability", "Creativity", "Teamwork", "Time Management", "Stakeholder Management", "Negotiation", "Conflict Resolution", "Public Speaking", "Decision Making", "Attention to Detail", "Emotional Intelligence", "Collaboration", "Project Management", "Mentoring", "Active Listening", "Strategic Thinking", "Work Ethic", "Resilience", "Innovation", "Organization", "Facilitation", "Change Management", "Coaching", "Presentation Skills"
+  ]
+}

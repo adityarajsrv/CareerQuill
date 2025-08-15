@@ -7,7 +7,7 @@ import docx
 import fitz 
 from pathlib import Path
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "skills_map_final.json"
+CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "skills_map_master.json"
 
 def read_file(file_path):
     """Read and return text from PDF, DOCX, or TXT."""
