@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+
+# Node modules
+node_modules/
+
+# Env files
+.env
+
+# Large datasets
+*.csv
+*.zip
+datasets/
+
+ATS_scoring_roadmap.txt
+ResumeTests
+skills_map_cleaned.json
+skills_map.json

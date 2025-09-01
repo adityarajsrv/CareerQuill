@@ -12,6 +12,8 @@ import ResumeTemplate3 from "./templates/ResumeTemplate3";
 import ResumeTemplate4 from "./templates/ResumeTemplate4";
 import ResumeTemplate5 from "./templates/ResumeTemplate5";
 import ResumeTemplate6 from "./templates/ResumeTemplate6";
+import ATS_Scoring from "./pages/ATS_Scoring";
+import ATS_Filterer from "./pages/ATS_Filterer";
 
 const App = () => {
   return (
@@ -34,6 +36,8 @@ const App = () => {
           </PrivateRoute>
         }/>
         <Route path = "/profile" element={<ProfilePage />} />
+        <Route path = "/ats_score" element={<ATS_Scoring />} />
+        <Route path = "/ats_filter" element={<ATS_Filterer />} />
       </Routes>
     </Router>
   )

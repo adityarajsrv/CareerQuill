@@ -1,459 +1,203 @@
-import { useRef, useState } from "react";
-import PropTypes from "prop-types";
 import Navbar from "../components/Navbar";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function ATSUploadHero({ onAnalyze }) {
-  const fileInputRef = useRef(null);
+const ATS_Scoring = () => {
   const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
-  const [processing, setProcessing] = useState(false);
-  const [result, setResult] = useState(null);
-
-  const handlePick = () => fileInputRef.current?.click();
-
-  function reset() {
-    setFile(null);
-    setError("");
-    setProcessing(false);
-    setResult(null);
-  }
-
-  const validateAndSet = (f) => {
-    if (!f) return;
-    if (f.type !== "application/pdf") {
-      setError("Please upload a PDF file.");
-      setFile(null);
-      return;
-    }
-    if (f.size > 5 * 1024 * 1024) {
-      // optional size limit (5MB)
-      setError("File is too large. Please use a PDF under 5MB.");
-      setFile(null);
-      return;
-    }
-    setError("");
-    setFile(f);
-  };
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
-    const f = e.target.files?.[0] ?? null;
-    validateAndSet(f);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const f = e.dataTransfer.files?.[0] ?? null;
-    validateAndSet(f);
+    const uploadedFile = e.target.files[0];
+    if (uploadedFile && uploadedFile.type === "application/pdf") {
+      setFile(uploadedFile);
+      setUploadError(null);
+      handleUpload(uploadedFile);
+    } else {
+      setUploadError("Please upload a valid PDF file.");
+      setUploadSuccess(false);
+    }
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    setIsDragging(true);
   };
 
-  async function handleAnalyze() {
-    if (!file) {
-      setError("Select a PDF to analyze.");
-      return;
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type === "application/pdf") {
+      setFile(droppedFile);
+      setUploadError(null);
+      handleUpload(droppedFile);
+    } else {
+      setUploadError("Please upload a valid PDF file.");
+      setUploadSuccess(false);
     }
+  };
 
-    setError("");
-    setProcessing(true);
-    setResult(null);
-
-    // If parent passed onAnalyze, call it (allowing server analysis).
-    if (onAnalyze) {
-      try {
-        const remoteResult = await onAnalyze(file);
-        setResult(remoteResult);
-      } catch (err) {
-        setError(err?.message || "Analysis failed. Try again.");
-      } finally {
-        setProcessing(false);
+  const handleUpload = async (uploadedFile) => {
+    setIsUploading(true);
+    try {
+      if (!uploadedFile) {
+        throw new Error("No file provided.");
       }
-      return;
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setUploadSuccess(true);
+      setIsUploading(false);
+    } catch {
+      setUploadError("Failed to process the file. Please try again.");
+      setUploadSuccess(false);
+      setIsUploading(false);
     }
+  };
 
-    // Otherwise simulate analysis locally (fake results)
-    setTimeout(() => {
-      const fakeScore = Math.max(30, Math.round(80 - Math.random() * 40));
-      const keywords = Math.round(Math.random() * 10 + 3);
-      setResult({ score: fakeScore, keywordsFound: keywords });
-      setProcessing(false);
-    }, 1200);
-  }
+  const handleClearFile = () => {
+    setFile(null);
+    setUploadSuccess(false);
+    setUploadError(null);
+  };
+
+  const handleProceed = () => {
+    if (uploadSuccess && file) {
+      navigate("/ats_filter", { state: { file } });
+    }
+  };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200">
       <Navbar />
-      <section className="bg-gradient-to-b from-sky-50 to-white py-12">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col lg:flex-row items-start gap-10">
-          <div className="flex-1">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 leading-tight">
-              Pass the ATS. Get seen.
-            </h1>
-            <p className="mt-4 text-lg text-slate-600">
-              Upload your resume for an instant ATS check — keyword matching,
-              format issues, and clear fixes you can apply in minutes.
-            </p>
+      <div className="flex flex-col lg:flex-row justify-between items-center px-16 py-20 gap-12 max-w-7xl mx-auto">
+        <div className="max-w-xl space-y-5">
+          <h1 className="mt-6 text-5xl font-extrabold text-gray-900 leading-tight">
+            Resume ATS Scoring
+          </h1>
+          <p className="text-gray-600 text-xl leading-relaxed">
+            Check how ATS-friendly your resume is. Get insights, keyword coverage,
+            and actionable suggestions to improve your chances.
+          </p>
 
-            <ul className="mt-6 space-y-3 text-slate-700">
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-0.5">
-                  <svg
-                    className="w-6 h-6 text-sky-500"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="9"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M9 12.5l1.8 1.8L15 10"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-                <span className="text-sm">Job-specific keyword matching</span>
-              </li>
-
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-0.5">
-                  <svg
-                    className="w-6 h-6 text-sky-500"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="3"
-                      y="6"
-                      width="18"
-                      height="12"
-                      rx="2"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M8 10h8"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-                <span className="text-sm">
-                  ATS-friendly format and structure checks
-                </span>
-              </li>
-
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 mt-0.5">
-                  <svg
-                    className="w-6 h-6 text-sky-500"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 5v6l4 2"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="9"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                </span>
-                <span className="text-sm">
-                  Clear, prioritized improvement tips
-                </span>
-              </li>
-            </ul>
-
-            <div className="mt-8 flex items-center gap-4">
-              <button
-                onClick={handlePick}
-                className="inline-flex items-center gap-3 bg-sky-600 hover:bg-sky-700 text-white font-medium px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
-              >
-                <svg
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 3v12"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 7l4-4 4 4"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Upload Resume
-              </button>
-
-              <button
-                onClick={() =>
-                  window.scrollTo({ top: 700, behavior: "smooth" })
-                }
-                className="text-sm text-slate-600 hover:underline"
-              >
-                Learn more
-              </button>
-            </div>
-          </div>
-
-          {/* Right panel - Upload card */}
-          <div className="w-full lg:w-[420px]">
-            <div className="bg-white border border-slate-100 rounded-xl p-6 shadow-sm">
-              <div
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                className={`rounded-lg border-2 ${
-                  file ? "border-sky-200" : "border-dashed border-slate-200"
-                } p-6 text-center cursor-pointer`}
-                onClick={handlePick}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") handlePick();
-                }}
-              >
-                <div className="mx-auto w-12 h-12 rounded-full bg-sky-50 flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-sky-500"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M7 10l5-5 5 5"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12 5v10"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-
-                <p className="mt-4 text-sm text-slate-600">
-                  Upload a PDF resume
-                </p>
-
-                <div className="mt-5 flex items-center justify-center">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="application/pdf"
-                    className="sr-only"
-                    onChange={handleFileChange}
-                  />
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePick();
-                    }}
-                    className="bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-sky-400"
-                  >
-                    Choose PDF
-                  </button>
-                </div>
-
-                <p className="mt-4 text-xs text-slate-400">
-                  PDF only. We never store your files.
-                </p>
-              </div>
-
-              {/* selected file / actions */}
-              <div className="mt-4">
-                {error && <p className="text-sm text-rose-600">{error}</p>}
-
-                {file && (
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <svg
-                        className="w-8 h-8 text-slate-400"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                          stroke="currentColor"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M14 2v6h6"
-                          stroke="currentColor"
-                          strokeWidth="1.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <div className="text-sm">
-                        <div className="font-medium text-slate-800">
-                          {file.name}
-                        </div>
-                        <div className="text-xs text-slate-500">
-                          {(file.size / 1024).toFixed(0)} KB
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={reset}
-                        className="text-sm text-slate-600 hover:underline"
-                      >
-                        Remove
-                      </button>
-
-                      <button
-                        onClick={handleAnalyze}
-                        disabled={processing}
-                        className={`inline-flex items-center gap-2 bg-sky-600 text-white px-3 py-1.5 rounded-md font-medium disabled:opacity-60 disabled:cursor-not-allowed`}
-                      >
-                        {processing ? (
-                          <svg
-                            className="w-4 h-4 animate-spin"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <circle
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              className="opacity-20"
-                            />
-                            <path
-                              d="M22 12a10 10 0 0 0-10-10"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="w-4 h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 5v14"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M5 12h14"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        )}
-                        <span>{processing ? "Analyzing..." : "Analyze"}</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* result */}
-                {result && (
-                  <div className="mt-4 border border-slate-100 rounded-md p-3 bg-sky-50">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-xs text-slate-600">ATS Score</div>
-                        <div className="text-2xl font-semibold text-slate-900">
-                          {result.score} / 100
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xs text-slate-600">
-                          Keywords found
-                        </div>
-                        <div className="text-lg font-medium text-slate-800">
-                          {result.keywordsFound}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 text-sm text-slate-700">
-                      <p className="mb-1">Suggested next steps:</p>
-                      <ol className="list-decimal list-inside text-slate-600">
-                        <li>
-                          Compare found keywords with the job description.
-                        </li>
-                        <li>
-                          Fix any complex formatting (tables, images) that may
-                          break parsers.
-                        </li>
-                        <li>Apply suggested wording from the full report.</li>
-                      </ol>
-                    </div>
-                  </div>
-                )}
-
-                <p className="sr-only" aria-live="polite">
-                  {processing
-                    ? "Analyzing resume"
-                    : result
-                    ? "Analysis complete"
-                    : ""}
-                </p>
-              </div>
-            </div>
-          </div>
+          <ul className="space-y-3 text-lg text-gray-700">
+            <li className="flex items-center gap-3">
+              <span className="text-blue-500 text-2xl">✔</span>
+              Keyword match analysis vs. job description
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-blue-500 text-2xl">✔</span>
+              Format and structure checks for ATS parsers
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-blue-500 text-2xl">✔</span>
+              Clear, actionable improvement tips
+            </li>
+          </ul>
         </div>
-      </section>
+
+        <div className="backdrop-blur-xl bg-white/40 border border-white/50 shadow-2xl rounded-3xl p-10 w-full max-w-md flex flex-col items-center">
+          <div
+            className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300 transform ${
+              isDragging
+                ? "border-blue-500 shadow-lg shadow-blue-400/50 scale-105 animate-pulse"
+                : "border-blue-300 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-400/30 hover:scale-105"
+            } ${isUploading || uploadSuccess ? "opacity-50 pointer-events-none" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              accept=".pdf"
+              id="file-upload"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={isUploading || uploadSuccess}
+            />
+            <label htmlFor="file-upload" className="flex flex-col items-center">
+              <svg
+                className={`w-14 h-14 mb-3 ${
+                  isUploading ? "text-gray-400 animate-spin" : "text-blue-500"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={
+                    isUploading
+                      ? "M12 4v16m8-8H4"
+                      : "M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6h.1a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  }
+                />
+              </svg>
+              <p className="text-lg font-medium text-gray-700">
+                {isUploading ? "Uploading..." : "Upload a PDF resume"}
+              </p>
+              <p className="text-sm text-gray-500 mt-1">
+                PDF only. We never store your files.
+              </p>
+              {!isUploading && !uploadSuccess && (
+                <span className="mt-5 bg-blue-600 text-white px-6 py-3 text-lg rounded-lg shadow cursor-pointer hover:bg-blue-700 transition">
+                  Upload PDF
+                </span>
+              )}
+            </label>
+          </div>
+
+          {file && !isUploading && uploadSuccess && (
+            <div className="mt-6 p-4 bg-green-100/70 rounded-xl w-full text-center">
+              <p className="text-base text-green-700">File uploaded successfully!</p>
+              <p className="text-lg font-medium text-gray-900">{file.name}</p>
+              <div className="mt-4 flex justify-center gap-4">
+                <button
+                  onClick={handleClearFile}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 transition cursor-pointer"
+                >
+                  Change File
+                </button>
+                <button
+                  onClick={handleProceed}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
+                >
+                  Proceed to Analysis
+                </button>
+              </div>
+            </div>
+          )}
+
+          {file && !isUploading && !uploadSuccess && !uploadError && (
+            <div className="mt-6 p-4 bg-white/70 rounded-xl w-full text-center">
+              <p className="text-base text-gray-700">Selected file:</p>
+              <p className="text-lg font-medium text-gray-900">{file.name}</p>
+            </div>
+          )}
+
+          {uploadError && (
+            <div className="mt-6 p-4 bg-red-100/70 rounded-xl w-full text-center">
+              <p className="text-base text-red-700">{uploadError}</p>
+              <button
+                onClick={handleClearFile}
+                className="mt-4 bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 transition"
+              >
+                Try Another File
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
-}
-
-ATSUploadHero.propTypes = {
-  onAnalyze: PropTypes.func,
 };
+
+export default ATS_Scoring;
