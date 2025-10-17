@@ -1,27 +1,27 @@
 import { IoCall, IoMailSharp } from "react-icons/io5";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import html2pdf from "html2pdf.js";
+// import html2pdf from "html2pdf.js";
 
 const ResumeTemplate2 = () => {
-  const downloadPDF = () => {
-    const element = document.getElementById("resume-content");
-    html2pdf()
-      .set({
-        margin: 0.5,
-        filename: "Amit_Sharma_Resume.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-      })
-      .from(element)
-      .save();
-  };
+  // const downloadPDF = () => {
+  //   const element = document.getElementById("resume-content");
+  //   html2pdf()
+  //     .set({
+  //       margin: 0.5,
+  //       filename: "Amit_Sharma_Resume.pdf",
+  //       image: { type: "jpeg", quality: 0.98 },
+  //       html2canvas: { scale: 2 },
+  //       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+  //     })
+  //     .from(element)
+  //     .save();
+  // };
 
   return (
     <div>
       <div className="flex justify-end mb-4 max-w-3xl mx-auto">
         <button
-          onClick={downloadPDF}
+          // onClick={downloadPDF}
           className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-500 cursor-pointer"
         >
           Download PDF

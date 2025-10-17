@@ -48,6 +48,11 @@ const Hero = () => {
               View Templates
             </button>
           </Link>
+          <Link to="/ats_score">
+            <button className="px-5 py-2 bg-blue-500 text-white border rounded-lg cursor-pointer hover:bg-blue-600 border-white">
+              Score My Resume
+            </button>
+          </Link>
         </div>
         <ul className="flex flex-row space-x-5">
           <li className="text-gray-500 ml-28 mt-3">

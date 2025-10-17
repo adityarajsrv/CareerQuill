@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@keyframes progress {
+  from {
+    stroke-dashoffset: 314;
+  }
+  to {
+    stroke-dashoffset: var(--stroke-dashoffset);
+  }
+}
+.progress-circle {
+  animation: progress 1.5s ease-out forwards;
+}
