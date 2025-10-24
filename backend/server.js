@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
+const atsRoutes = require('./routes/atsRoutes');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/ats', atsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
