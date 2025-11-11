@@ -13,13 +13,13 @@ const TemplateCard = ({
   link = "/",
 }) => {
   return (
-    <div className="w-[400px] h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
+    <div className="w-[420px] h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col justify-between transition-all duration-200 hover:shadow-xl">
       <div>
         <div className="relative mb-4">
           <img
             src={imageSrc}
             alt={`${name} Template`}
-            className="w-full h-48 object-cover rounded border-b-1 border-gray-100 shadow-sm"
+            className="w-full h-92 object-scale-down rounded border-b-1 border-gray-100 shadow-sm"
             loading="lazy"
           />
           <div className="flex items-center mt-4 flex-wrap gap-1">
@@ -44,7 +44,7 @@ const TemplateCard = ({
         <p className="text-sm text-gray-600 mt-1 line-clamp-2">{description}</p>
         <div className="flex space-x-2 mt-2 flex-wrap">
           {tags.map((tag, index) => (
-            <span key={index} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+            <span key={index} className="text-xs cursor-pointer bg-blue-100 text-blue-800 px-2 py-1 rounded">
               {tag}
             </span>
           ))}
@@ -68,7 +68,7 @@ TemplateCard.propTypes = {
   recommended: PropTypes.bool,
   atsFriendly: PropTypes.bool,
   newTemplate: PropTypes.bool,
-  link: PropTypes.string, // New prop for routing
+  link: PropTypes.string, 
 };
 
 export default TemplateCard;

@@ -71,7 +71,7 @@ const Hero = () => {
           <img
             src={images[currentImageIndex]}
             alt="Hero"
-            className="absolute w-full h-full border border-gray-100 shadow-2xl shadow-gray-300 object-cover backface-hidden"
+            className="absolute w-full h-full border border-gray-100 drop-shadow-2xl shadow-gray-300 object-cover backface-hidden"
           />
         </div>
       </div>
