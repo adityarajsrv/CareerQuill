@@ -3,13 +3,14 @@ import template1 from '../assets/template1.png';
 import template2 from '../assets/template2.png';
 import template3 from '../assets/template3.png';
 import template4 from '../assets/template4.png';
+import { Link } from 'react-router-dom';
 
 const Examples = () => {
   const templates = [
-    { title: "Executive Classic", description: "Traditional layout perfect for senior management positions" },
-    { title: "Creative Edge", description: "Bold design for creative professionals and designers" },
-    { title: "Minimalist Pro", description: "Simple and elegant for any industry" },
-    { title: "Academic Scholar", description: "Structured format ideal for research and education" },
+    { title: "Professional", description: "Clean and contemporary design perfect for modern professionals" },
+    { title: "Modern", description: "Traditional business format ideal for corporate environments" },
+    { title: "Creative", description: "Artist-inspired eye-catching design for creative professionals" },
+    { title: "Academic", description: "Structured design ideal for research and education" },
   ];
 
   const sectionRef = useRef(null);
@@ -133,9 +134,11 @@ const Examples = () => {
               </button>
             </div>
           ))}
-          <button className="w-full bg-blue-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
-            Browse All Templates
-          </button>
+          <Link to="/templates">
+            <button className="w-full bg-blue-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+              Browse All Templates
+            </button>
+          </Link>
         </div>
       </div>
     </div>

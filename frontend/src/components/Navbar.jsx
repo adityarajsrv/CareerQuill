@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { PiUserCircleDuotone } from "react-icons/pi";
 import { useAuth } from "../context/AuthContext";
+import { useScroll } from "../context/ScrollContext";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,6 +12,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { scrollToSection } = useScroll();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -19,7 +22,6 @@ const Navbar = () => {
           withCredentials: true,
         });
         setIsLoggedIn(true);
-        // setUsername(res.data.username || "User"); 
       } catch (err) {
         setIsLoggedIn(false);
       }
@@ -51,6 +53,24 @@ const Navbar = () => {
     }
   };
 
+  const handleFeaturesClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      scrollToSection("features-section");
+    } else {
+      navigate("/", { state: { scrollTo: "features-section" } });
+    }
+  };
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      scrollToSection("footer-section");
+    } else {
+      navigate("/", { state: { scrollTo: "footer-section" } });
+    }
+  };
+
   return (
     <div className="flex items-center justify-between p-5 text-gray-300 border-b-1">
       <div className="text-2xl font-bold text-gray-800 ml-12 cursor-pointer">
@@ -60,8 +80,20 @@ const Navbar = () => {
       <div className="flex space-x-5">
         <Link to="/" className="text-gray-500 hover:text-blue-600 hover:underline">Home</Link>
         <Link to="/templates" className="text-gray-500 hover:text-blue-600 hover:underline">Templates</Link>
-        <Link to="/features" className="text-gray-500 hover:text-blue-600 hover:underline">Features</Link>
-        <Link to="/contact" className="text-gray-500 hover:text-blue-600 hover:underline">Contact</Link>
+        <a 
+          href="#features" 
+          onClick={handleFeaturesClick}
+          className="text-gray-500 hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Features
+        </a>
+        <a 
+          href="#contact" 
+          onClick={handleContactClick}
+          className="text-gray-500 hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Contact
+        </a>
       </div>
 
       <div className="flex items-center space-x-5 mr-12" ref={dropdownRef}>

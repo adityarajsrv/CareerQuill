@@ -42,7 +42,7 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
+    <section id="features-section" className="py-12 sm:py-16 md:py-20 lg:py-28 px-4 sm:px-6 md:px-8 lg:px-10 bg-white">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 text-center mb-4">
           Everything You Need to <span className='text-blue-500'>Succeed</span>

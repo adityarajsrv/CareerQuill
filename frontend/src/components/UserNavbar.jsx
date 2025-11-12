@@ -1,16 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { PiUserCircleDuotone } from "react-icons/pi";
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { useScroll } from '../context/ScrollContext';
 
 const UserNavbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { user } = useAuth();
+  const { scrollToSection } = useScroll();
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -19,18 +22,29 @@ const UserNavbar = () => {
   };
 
   const handleLogout = async () => {
-      try {
-        await axios.post(
-          "http://localhost:5000/api/auth/logout",
-          {},
-          { withCredentials: true }
-        );
-        setIsLoggedIn(false);
-        navigate("/login");
-      } catch (err) {
-        console.error("Logout failed:", err);
-      }
-    };
+    try {
+      await axios.post(
+        "http://localhost:5000/api/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      setIsLoggedIn(false);
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    if (location.pathname === "/") {
+      // If we're already on home page, scroll to footer
+      scrollToSection("footer-section");
+    } else {
+      // Navigate to home page with scroll target
+      navigate("/", { state: { scrollTo: "footer-section" } });
+    }
+  };
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -50,7 +64,13 @@ const UserNavbar = () => {
         <Link to="/dashboard" className="text-gray-500 hover:text-blue-600 hover:underline">Dashboard</Link>
         <Link to="/templates" className="text-gray-500 hover:text-blue-600 hover:underline">Templates</Link>
         <Link to="/profile" className="text-gray-500 hover:text-blue-600 hover:underline">Profile</Link>
-        <Link to="/contact" className="text-gray-500 hover:text-blue-600 hover:underline">Contact</Link>
+        <a 
+          href="#contact" 
+          onClick={handleContactClick}
+          className="text-gray-500 hover:text-blue-600 hover:underline cursor-pointer"
+        >
+          Contact
+        </a>
       </div>
       
       <div className="flex items-center space-x-5 mr-12" ref={dropdownRef}>
@@ -66,27 +86,32 @@ const UserNavbar = () => {
             </svg>
           </button>
           {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+            <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
+              <Link
+                to="/profile"
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </Link>
+              <Link
+                to="/dashboard"
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
