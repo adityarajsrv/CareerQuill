@@ -28,7 +28,7 @@ const Workflow = () => {
     {
       number: 4,
       icon: <ArrowDownTrayIcon className="h-8 w-8 text-blue-500" />,
-      title: 'Download Resume',
+      title: 'Download or Share',
       description: 'Export as PDF, save online, or share directly with employers. Your resume, your way.',
     },
   ];
