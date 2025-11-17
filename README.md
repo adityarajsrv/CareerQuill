@@ -4,8 +4,6 @@
 
 **Build ATS-friendly resumes that actually get noticed - no design skills needed**
 
-_Personal Project • August 2025 - September 2025_
-
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Quick Start](#-quick-start) • [Project Structure](#-project-structure)
 
 </div>
