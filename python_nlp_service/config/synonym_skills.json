@@ -1,0 +1,263 @@
+{
+  "JavaScript": [
+    "javascript",
+    "js",
+    "javascript basics",
+    "javascript advanced",
+    "ecmascript",
+    "es6",
+    "es6+",
+    "javascript es6",
+    "jscript",
+    "java script",
+    "javascrpt",
+    "javscript",
+    "javasript",
+    "jscript",
+    "vanilla javascript"
+  ],
+  "React": [
+    "react",
+    "reactjs",
+    "react.js",
+    "react js",
+    "react native",
+    "reactnative",
+    "reactjs basics",
+    "react basics"
+  ],
+  "Python": [
+    "python",
+    "py",
+    "python3",
+    "python 3",
+    "python basics",
+    "python advanced",
+    "pyhton",
+    "python2",
+    "py3"
+  ],
+  "AWS": [
+    "aws",
+    "amazon web services",
+    "aws cloud",
+    "aws solutions architect",
+    "amazon aws",
+    "aws devops"
+  ],
+  "Azure": [
+    "azure",
+    "microsoft azure",
+    "azure devops",
+    "azure cloud"
+  ],
+  "Google Cloud": [
+    "gcp",
+    "google cloud",
+    "google cloud platform",
+    "google compute platform"
+  ],
+  "Git": [
+    "git",
+    "github",
+    "gitlab",
+    "git version control",
+    "git vcs",
+    "github repo",
+    "gitlab repo"
+  ],
+  "Node.js": [
+    "node",
+    "nodejs",
+    "node.js",
+    "node js",
+    "nodejs basics",
+    "node basics"
+  ],
+  "Express.js": [
+    "express",
+    "expressjs",
+    "express.js",
+    "express js"
+  ],
+  "Scikit-learn": [
+    "scikit-learn",
+    "scikit",
+    "sklearn",
+    "scikit learn"
+  ],
+  "TensorFlow": [
+    "tensorflow",
+    "tf",
+    "tensorflow lite",
+    "tf lite"
+  ],
+  "PyTorch": [
+    "pytorch",
+    "torch",
+    "py torch",
+    "py-torch"
+  ],
+  "PostgreSQL": [
+    "postgresql",
+    "postgres",
+    "postgres sql"
+  ],
+  "MongoDB": [
+    "mongodb",
+    "mongo",
+    "mongo db"
+  ],
+  "SQL": [
+    "sql",
+    "structured query language",
+    "sql server",
+    "mysql",
+    "postgresql",
+    "mariadb"
+  ],
+  "Docker": [
+    "docker",
+    "containerization",
+    "docker containers"
+  ],
+  "Kubernetes": [
+    "kubernetes",
+    "k8s",
+    "kube"
+  ],
+  "DevOps": [
+    "devops",
+    "dev ops",
+    "devops engineer",
+    "ci/cd",
+    "continuous integration",
+    "continuous delivery",
+    "continuous deployment"
+  ],
+  "Machine Learning": [
+    "machine learning",
+    "ml",
+    "machine-learning",
+    "ml basics",
+    "ml advanced",
+    "machine learning basics"
+  ],
+  "Deep Learning": [
+    "deep learning",
+    "deeplearning",
+    "dl"
+  ],
+  "NLP": [
+    "nlp",
+    "natural language processing",
+    "nlp basics",
+    "nlp advanced"
+  ],
+  "AI": [
+    "ai",
+    "artificial intelligence",
+    "generative ai",
+    "ai frameworks"
+  ],
+  "Data Analysis": [
+    "data analysis",
+    "data analytics",
+    "analytics",
+    "data analyst"
+  ],
+  "SQL Server": [
+    "sql server",
+    "microsoft sql server",
+    "mssql"
+  ],
+  ".NET": [
+    ".net",
+    ".net framework",
+    ".net core",
+    "asp.net",
+    "asp.net core",
+    "dotnet"
+  ],
+  "C#": [
+    "c#",
+    "c sharp",
+    "csharp"
+  ],
+  "Java": [
+    "java",
+    "java basics",
+    "java advanced"
+  ],
+  "C++": [
+    "c++",
+    "cpp",
+    "c plus plus"
+  ],
+  "R": [
+    "r",
+    "r language",
+    "r programming"
+  ],
+  "Keras": [
+    "keras",
+    "keras deep learning"
+  ],
+  "OpenCV": [
+    "opencv",
+    "open cv"
+  ],
+  "Pandas": [
+    "pandas",
+    "python pandas"
+  ],
+  "NumPy": [
+    "numpy",
+    "numppy",
+    "np"
+  ],
+  "Hadoop": [
+    "hadoop",
+    "hadoop ecosystem",
+    "hdfs",
+    "mapreduce",
+    "hive",
+    "pig"
+  ],
+  "Apache Spark": [
+    "apache spark",
+    "spark",
+    "spark streaming"
+  ],
+  "MLOps": [
+    "mlops",
+    "machine learning operations",
+    "ml ops"
+  ],
+  "REST APIs": [
+    "rest apis",
+    "rest api",
+    "restful api",
+    "restful apis"
+  ],
+  "GraphQL": [
+    "graphql",
+    "graphql basics"
+  ],
+  "CI/CD": [
+    "ci/cd",
+    "continuous integration",
+    "continuous delivery",
+    "continuous deployment",
+    "jenkins",
+    "github actions",
+    "gitlab ci"
+  ],
+  "Linux": [
+    "linux",
+    "linux/unix",
+    "unix",
+    "ubuntu",
+    "debian"
+  ]
+}
