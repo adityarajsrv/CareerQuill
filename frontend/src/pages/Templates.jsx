@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { CiSearch } from "react-icons/ci";
 import TemplateCard from "../components/TemplateCard";
@@ -5,11 +6,14 @@ import template1 from "../assets/template1.png";
 import template2 from "../assets/template2.png";
 import template3 from "../assets/template3.png";
 import template4 from "../assets/template4.png";
+import template5 from "../assets/template5.png";
+import template6 from "../assets/template6.png";
 import Footer from "../components/Footer";
 
 const Templates = () => {
   const templates = [
     {
+      id: 1,
       name: "Professional",
       description: "Clean and contemporary design perfect for modern professionals",
       tags: ["Clean", "Professional", "Minimalist"],
@@ -20,6 +24,7 @@ const Templates = () => {
       link: "/build?template=template1",
     },
     {
+      id: 2,
       name: "Modern",
       description: "Traditional business format ideal for corporate environments",
       tags: ["Corporate", "Traditional", "Business"],
@@ -30,6 +35,7 @@ const Templates = () => {
       link: "/build?template=template2",
     },
     {
+      id: 3,
       name: "Creative",
       description: "Artist-inspired eye-catching design for creative professionals",
       tags: ["Artistic", "Colorful", "Creative"],
@@ -40,6 +46,7 @@ const Templates = () => {
       link: "/build?template=template3",
     },
     {
+      id: 4,
       name: "Executive",
       description: "Sophisticated layout tailored for senior-level professionals",
       tags: ["Formal", "Executive", "Elegant"],
@@ -50,20 +57,22 @@ const Templates = () => {
       link: "/build?template=template4",
     },
     {
+      id: 5,
       name: "Academic",
       description: "Structured design ideal for educators and researchers",
       tags: ["Academic", "Detailed", "Structured"],
-      imageSrc: template4,
+      imageSrc: template5,
       recommended: false,
       atsFriendly: true,
       newTemplate: true,
       link: "/build?template=template5",
     },
     {
+      id: 6,
       name: "Tech",
       description: "Modern and tech-focused design for IT and engineering roles",
       tags: ["Tech", "Innovative", "Bold"],
-      imageSrc: template4,
+      imageSrc: template6,
       recommended: false,
       atsFriendly: true,
       newTemplate: false,
@@ -71,44 +80,80 @@ const Templates = () => {
     },
   ];
 
+  const [filter, setFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filterTags = ["All", "Professional", "ATS-friendly", "Creative", "Academic", "Tech"];
+
+  const filteredTemplates = templates.filter((template) => {
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      return (
+        template.name.toLowerCase().includes(query) ||
+        template.description.toLowerCase().includes(query) ||
+        template.tags.some((tag) => tag.toLowerCase().includes(query))
+      );
+    }
+
+    if (filter === "All") return true;
+    if (filter === "Professional") return template.tags.includes("Professional");
+    if (filter === "ATS-friendly") return template.atsFriendly;
+    if (filter === "Creative") return template.tags.includes("Creative");
+    if (filter === "Academic") return template.tags.includes("Academic");
+    if (filter === "Tech") return template.tags.includes("Tech");
+
+    return true;
+  });
+
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <Navbar />
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-center text-5xl text-blue-600 font-bold pt-6">
-          Choose Your Resume Template
+      <div className="flex flex-col items-center justify-center px-4 pt-10 pb-6">
+        <h1 className="text-center text-4xl md:text-5xl font-bold text-gray-900">
+          Choose Your <span className="text-blue-600">Resume Template</span>
         </h1>
-        <p className="p-3 text-center text-lg w-[45%]">
-          Select a professionally designed template that fits your style and
-          role. All templates are optimized for both ATS systems and human
-          recruiters.
+        <p className="mt-4 text-center text-lg text-gray-600 max-w-3xl">
+          Select a professionally designed template that fits your style and role.
+          All templates are optimized for both ATS systems and human recruiters.
         </p>
       </div>
-      <div className="flex flex-row items-center justify-between mt-10 px-10">
-        <div className="w-full max-w-2xl p-6 ml-14">
-          <div className="relative">
+      <div className="flex flex-col lg:flex-row items-center justify-between px-6 lg:px-12 mt-8 gap-6">
+        <div className="w-full lg:w-1/2">
+          <div className="relative max-w-md">
             <input
               type="text"
-              placeholder="Search templates..."
-              className="w-[60%] p-1.5 pl-8 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search templates by name, tag or description..."
+              className="w-full p-3 pl-10 border-2 border-gray-200 rounded-xl bg-white text-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
           </div>
         </div>
-        <div className="flex items-center space-x-2 mr-6 text-sm"> 
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">All</button>
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Professional</button>
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Minimalist</button>
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">ATS-friendly</button>
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Formal</button>
-          <button className="border border-gray-300 bg-gray-100 cursor-pointer px-3 py-1 hover:bg-gray-200 rounded-full">Corporate</button>
+        <div className="flex flex-wrap justify-center gap-3">
+          {filterTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => {
+                setFilter(tag);
+                setSearchQuery("");
+              }}
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
+                filter === tag
+                  ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-200"
+                  : "bg-white text-gray-700 border border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
       </div>
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10 ml-20 p-6">
-          {templates.map((template, index) => (
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredTemplates.map((template) => (
             <TemplateCard
-              key={index}
+              key={template.id}
               name={template.name}
               description={template.description}
               tags={template.tags}
