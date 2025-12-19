@@ -2,12 +2,12 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { CiSearch } from "react-icons/ci";
 import TemplateCard from "../components/TemplateCard";
-import template1 from "../assets/template1.png";
-import template2 from "../assets/template2.png";
-import template3 from "../assets/template3.png";
-import template4 from "../assets/template4.png";
-import template5 from "../assets/template5.png";
-import template6 from "../assets/template6.png";
+import template1 from "../assets/template-1.png";
+import template2 from "../assets/template-2.png";
+import template3 from "../assets/template-3.png";
+import template4 from "../assets/template-4.png";
+import template5 from "../assets/template-5.png";
+import template6 from "../assets/template-6.png";
 import Footer from "../components/Footer";
 
 const Templates = () => {
