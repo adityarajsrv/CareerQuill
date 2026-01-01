@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import heroImg1 from "../assets/heroImg-1.png";
+import heroImg2 from "../assets/heroImg-2.png";
+import heroImg3 from "../assets/heroImg-3.png";
 
 const Hero = () => {
   const images = [
-    "/src/assets/heroImg-1.png",
-    "/src/assets/heroImg-2.png",
-    "/src/assets/heroImg-3.png",
+    heroImg1,
+    heroImg2,
+    heroImg3,
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
