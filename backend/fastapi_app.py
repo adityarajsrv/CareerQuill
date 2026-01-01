@@ -81,24 +81,16 @@ async def score_resume(file: UploadFile = File(...), job_title: str = "", experi
     try:
         print(f"Scoring file against: {job_title} ({experience_level})")
         
-        project_root = Path(__file__).parent.parent
+        # Direct import approach - same as parser
+        try:
+            from python_nlp_service.modules.ats_scorer import ats_score_verbose
+            print("✅ Successfully imported scorer")
+        except ImportError as e:
+            print(f"❌ Scorer import failed: {e}")
+            raise HTTPException(status_code=500, detail=f"Scorer import failed: {e}")
         
-        # Run scorer with job parameters
-        result = subprocess.run([
-            'python', 
-            'python_nlp_service/modules/ats_scorer_runner.py', 
-            temp_path,
-            job_title,
-            experience_level
-        ], capture_output=True, text=True, cwd=project_root)
-        
-        print(f"Scorer return code: {result.returncode}")
-        print(f"Scorer stdout: {result.stdout}")
-        
-        if result.returncode != 0:
-            raise HTTPException(status_code=500, detail=f"Failed to score resume: {result.stderr}")
-        
-        score_result = json.loads(result.stdout)
+        # Call the function directly
+        score_result = ats_score_verbose(temp_path, job_title, experience_level)
         return JSONResponse(content=score_result)
         
     except Exception as e:

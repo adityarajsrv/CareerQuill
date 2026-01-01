@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import {
   User,
@@ -16,11 +16,15 @@ import {
   Scroll,
   Download,
 } from "lucide-react";
-import { useSearchParams } from "react-router-dom"; // Import useSearchParams
+import { useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ResumeTemplate1 from "../templates/ResumeTemplate1";
-import ResumeTemplate2 from "../templates/ResumeTemplate2"; // Import other templates as needed
+import ResumeTemplate2 from "../templates/ResumeTemplate2";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ResumeTemplate4 from "../templates/ResumeTemplate4";
+import ResumeTemplate5 from "../templates/ResumeTemplate5";
 
 const steps = [
   { id: 1, name: "Personal Info", icon: User },
@@ -34,12 +38,29 @@ const steps = [
 ];
 
 const months = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
-// Reusable components (InputField, SelectField, TextArea, SectionHeader) remain unchanged
-const InputField = ({ label, type = "text", placeholder, value, onChange, required = false, error = false }) => (
+const InputField = ({
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  required = false,
+  error = false,
+}) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
       {label} {required && <span className="text-red-500">*</span>}
@@ -49,10 +70,14 @@ const InputField = ({ label, type = "text", placeholder, value, onChange, requir
       placeholder={placeholder}
       value={value ?? ""}
       onChange={onChange}
-      className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+      className={`w-full px-3 py-2 border ${
+        error ? "border-red-500" : "border-gray-300"
+      } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       required={required}
     />
-    {error && <p className="text-xs text-red-500 mt-1">This field is required</p>}
+    {error && (
+      <p className="text-xs text-red-500 mt-1">This field is required</p>
+    )}
   </div>
 );
 
@@ -89,16 +114,26 @@ const SelectField = ({
     <select
       value={value ?? ""}
       onChange={onChange}
-      className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+      className={`w-full px-3 py-2 border ${
+        error ? "border-red-500" : "border-gray-300"
+      } rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+        disabled ? "bg-gray-100 cursor-not-allowed" : ""
+      }`}
       required={required}
       disabled={disabled}
     >
-      <option value="" disabled>{placeholder}</option>
+      <option value="" disabled>
+        {placeholder}
+      </option>
       {options.map((option) => (
-        <option key={option} value={option}>{option}</option>
+        <option key={option} value={option}>
+          {option}
+        </option>
       ))}
     </select>
-    {error && <p className="text-xs text-red-500 mt-1">Please select a month</p>}
+    {error && (
+      <p className="text-xs text-red-500 mt-1">Please select a month</p>
+    )}
   </div>
 );
 
@@ -119,7 +154,15 @@ SelectField.defaultProps = {
   disabled: false,
 };
 
-const TextArea = ({ label, placeholder, value, onChange, rows = 4, required = false, error = false }) => (
+const TextArea = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  rows = 4,
+  required = false,
+  error = false,
+}) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">
       {label} {required && <span className="text-red-500">*</span>}
@@ -129,10 +172,14 @@ const TextArea = ({ label, placeholder, value, onChange, rows = 4, required = fa
       value={value ?? ""}
       onChange={onChange}
       rows={rows}
-      className={`w-full px-3 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical`}
+      className={`w-full px-3 py-2 border ${
+        error ? "border-red-500" : "border-gray-300"
+      } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical`}
       required={required}
     />
-    {error && <p className="text-xs text-red-500 mt-1">This field is required</p>}
+    {error && (
+      <p className="text-xs text-red-500 mt-1">This field is required</p>
+    )}
   </div>
 );
 
@@ -188,10 +235,11 @@ const ResumeBuilder = () => {
   const [collapsedSections, setCollapsedSections] = useState({});
   const [showPreview, setShowPreview] = useState(false);
   const [errors, setErrors] = useState({});
-  const [searchParams, setSearchParams] = useSearchParams(); // Get URL parameters
-  const [selectedTemplate, setSelectedTemplate] = useState("template1"); // Default to template1
+  const [searchParams] = useSearchParams();
+  const [selectedTemplate, setSelectedTemplate] = useState("template1");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const resumeRef = useRef(null);
 
-  // Detect template from URL on mount
   useEffect(() => {
     const template = searchParams.get("template");
     if (template) {
@@ -359,30 +407,38 @@ const ResumeBuilder = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Personal Info Validation
     if (!personalInfo.firstName.trim()) newErrors.firstName = true;
     if (!personalInfo.lastName.trim()) newErrors.lastName = true;
     if (!personalInfo.email.trim() && !personalInfo.phone.trim()) {
       newErrors.email = true;
       newErrors.phone = true;
-    } else if (personalInfo.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)) {
+    } else if (
+      personalInfo.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(personalInfo.email)
+    ) {
       newErrors.email = true;
     }
 
-    // Education Validation
-    const hasValidEducation = education.some((edu) => edu.school.trim() && edu.degree.trim());
+    const hasValidEducation = education.some(
+      (edu) => edu.school.trim() && edu.degree.trim()
+    );
     education.forEach((edu) => {
-      if (edu.school.trim() && !edu.degree.trim()) newErrors[`education-${edu.id}-degree`] = true;
-      if (edu.degree.trim() && !edu.school.trim()) newErrors[`education-${edu.id}-school`] = true;
-      if (!edu.current && edu.endMonth.trim() && !edu.endYear.trim()) newErrors[`education-${edu.id}-endYear`] = true;
-      if (!edu.current && !edu.endMonth.trim() && edu.endYear.trim()) newErrors[`education-${edu.id}-endMonth`] = true;
+      if (edu.school.trim() && !edu.degree.trim())
+        newErrors[`education-${edu.id}-degree`] = true;
+      if (edu.degree.trim() && !edu.school.trim())
+        newErrors[`education-${edu.id}-school`] = true;
+      if (!edu.current && edu.endMonth.trim() && !edu.endYear.trim())
+        newErrors[`education-${edu.id}-endYear`] = true;
+      if (!edu.current && !edu.endMonth.trim() && edu.endYear.trim())
+        newErrors[`education-${edu.id}-endMonth`] = true;
     });
     if (!hasValidEducation) {
-      if (education.length === 0 || !education[0].school.trim()) newErrors[`education-${education[0].id}-school`] = true;
-      if (education.length === 0 || !education[0].degree.trim()) newErrors[`education-${education[0].id}-degree`] = true;
+      if (education.length === 0 || !education[0].school.trim())
+        newErrors[`education-${education[0].id}-school`] = true;
+      if (education.length === 0 || !education[0].degree.trim())
+        newErrors[`education-${education[0].id}-degree`] = true;
     }
 
-    // Skills Validation
     if (!skills.trim()) newErrors.skills = true;
 
     setErrors(newErrors);
@@ -391,21 +447,40 @@ const ResumeBuilder = () => {
 
   const handleGenerateResume = () => {
     if (validateForm()) {
-      // Format dates to "Month Year"
       const formattedEducation = education.map((edu) => ({
         ...edu,
-        startDate: edu.startMonth && edu.startYear ? `${edu.startMonth} ${edu.startYear}` : "",
-        endDate: edu.current ? "Present" : (edu.endMonth && edu.endYear ? `${edu.endMonth} ${edu.endYear}` : ""),
+        startDate:
+          edu.startMonth && edu.startYear
+            ? `${edu.startMonth} ${edu.startYear}`
+            : "",
+        endDate: edu.current
+          ? "Present"
+          : edu.endMonth && edu.endYear
+          ? `${edu.endMonth} ${edu.endYear}`
+          : "",
       }));
       const formattedExperience = experience.map((exp) => ({
         ...exp,
-        startDate: exp.startMonth && exp.startYear ? `${exp.startMonth} ${exp.startYear}` : "",
-        endDate: exp.current ? "Present" : (exp.endMonth && exp.endYear ? `${exp.endMonth} ${exp.endYear}` : ""),
+        startDate:
+          exp.startMonth && exp.startYear
+            ? `${exp.startMonth} ${exp.startYear}`
+            : "",
+        endDate: exp.current
+          ? "Present"
+          : exp.endMonth && exp.endYear
+          ? `${exp.endMonth} ${exp.endYear}`
+          : "",
       }));
       const formattedProjects = projects.map((proj) => ({
         ...proj,
-        startDate: proj.startMonth && proj.startYear ? `${proj.startMonth} ${proj.startYear}` : "",
-        endDate: proj.endMonth && proj.endYear ? `${proj.endMonth} ${proj.endYear}` : "",
+        startDate:
+          proj.startMonth && proj.startYear
+            ? `${proj.startMonth} ${proj.startYear}`
+            : "",
+        endDate:
+          proj.endMonth && proj.endYear
+            ? `${proj.endMonth} ${proj.endYear}`
+            : "",
       }));
 
       setShowPreview(true);
@@ -415,17 +490,59 @@ const ResumeBuilder = () => {
     }
   };
 
-  // Dynamically select the template component
+  const handleDownloadPDF = async () => {
+    if (!resumeRef.current) return;
+
+    setIsGeneratingPDF(true);
+    try {
+      const canvas = await html2canvas(resumeRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 210;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const fileName =
+        `${personalInfo.firstName}_${personalInfo.lastName}_Resume.pdf`.replace(
+          /\s+/g,
+          "_"
+        );
+      pdf.save(fileName);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
   const getTemplateComponent = () => {
     const templateMap = {
       template1: ResumeTemplate1,
       template2: ResumeTemplate2,
-      template3: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
-      template4: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
-      template5: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
-      template6: ResumeTemplate1, // Using ResumeTemplate1 as placeholder
+      template3: ResumeTemplate1, 
+      template4: ResumeTemplate4,
+      template5: ResumeTemplate5,
+      template6: ResumeTemplate1, 
     };
-    return templateMap[selectedTemplate] || ResumeTemplate1; // Default to ResumeTemplate1
+    return templateMap[selectedTemplate] || ResumeTemplate1;
   };
 
   const TemplateComponent = getTemplateComponent();
@@ -441,7 +558,8 @@ const ResumeBuilder = () => {
           </p>
           {Object.keys(errors).length > 0 && (
             <p className="text-red-500 text-sm mt-2">
-              Please fill out all required fields correctly before generating the resume.
+              Please fill out all required fields correctly before generating
+              the resume.
             </p>
           )}
         </div>
@@ -450,7 +568,6 @@ const ResumeBuilder = () => {
       {!showPreview ? (
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="space-y-6">
-            {/* Personal Information */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[0]}
@@ -530,7 +647,10 @@ const ResumeBuilder = () => {
                       placeholder="New York"
                       value={personalInfo.city}
                       onChange={(e) =>
-                        setPersonalInfo({ ...personalInfo, city: e.target.value })
+                        setPersonalInfo({
+                          ...personalInfo,
+                          city: e.target.value,
+                        })
                       }
                     />
                     <InputField
@@ -571,7 +691,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Summary */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[1]}
@@ -592,7 +711,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Education */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[2]}
@@ -664,7 +782,11 @@ const ResumeBuilder = () => {
                             placeholder="Select month"
                             value={edu.startMonth}
                             onChange={(e) =>
-                              updateEducation(edu.id, "startMonth", e.target.value)
+                              updateEducation(
+                                edu.id,
+                                "startMonth",
+                                e.target.value
+                              )
                             }
                             options={months}
                             required
@@ -676,7 +798,11 @@ const ResumeBuilder = () => {
                             placeholder="2023"
                             value={edu.startYear}
                             onChange={(e) =>
-                              updateEducation(edu.id, "startYear", e.target.value)
+                              updateEducation(
+                                edu.id,
+                                "startYear",
+                                e.target.value
+                              )
                             }
                             min="1900"
                             max="2030"
@@ -691,7 +817,11 @@ const ResumeBuilder = () => {
                               placeholder="Select month"
                               value={edu.endMonth}
                               onChange={(e) =>
-                                updateEducation(edu.id, "endMonth", e.target.value)
+                                updateEducation(
+                                  edu.id,
+                                  "endMonth",
+                                  e.target.value
+                                )
                               }
                               options={months}
                               disabled={edu.current}
@@ -703,7 +833,11 @@ const ResumeBuilder = () => {
                               placeholder="2023"
                               value={edu.endYear}
                               onChange={(e) =>
-                                updateEducation(edu.id, "endYear", e.target.value)
+                                updateEducation(
+                                  edu.id,
+                                  "endYear",
+                                  e.target.value
+                                )
                               }
                               min="1900"
                               max="2030"
@@ -743,7 +877,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Experience */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[3]}
@@ -795,7 +928,11 @@ const ResumeBuilder = () => {
                             placeholder="Select month"
                             value={exp.startMonth}
                             onChange={(e) =>
-                              updateExperience(exp.id, "startMonth", e.target.value)
+                              updateExperience(
+                                exp.id,
+                                "startMonth",
+                                e.target.value
+                              )
                             }
                             options={months}
                           />
@@ -805,7 +942,11 @@ const ResumeBuilder = () => {
                             placeholder="2023"
                             value={exp.startYear}
                             onChange={(e) =>
-                              updateExperience(exp.id, "startYear", e.target.value)
+                              updateExperience(
+                                exp.id,
+                                "startYear",
+                                e.target.value
+                              )
                             }
                             min="1900"
                             max="2030"
@@ -818,7 +959,11 @@ const ResumeBuilder = () => {
                               placeholder="Select month"
                               value={exp.endMonth}
                               onChange={(e) =>
-                                updateExperience(exp.id, "endMonth", e.target.value)
+                                updateExperience(
+                                  exp.id,
+                                  "endMonth",
+                                  e.target.value
+                                )
                               }
                               options={months}
                               disabled={exp.current}
@@ -829,7 +974,11 @@ const ResumeBuilder = () => {
                               placeholder="2023"
                               value={exp.endYear}
                               onChange={(e) =>
-                                updateExperience(exp.id, "endYear", e.target.value)
+                                updateExperience(
+                                  exp.id,
+                                  "endYear",
+                                  e.target.value
+                                )
                               }
                               min="1900"
                               max="2030"
@@ -883,7 +1032,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Skills */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[4]}
@@ -902,13 +1050,13 @@ const ResumeBuilder = () => {
                     error={errors.skills}
                   />
                   <p className="text-sm text-gray-500 mt-2">
-                    Tip: Use the format: Category: Skill1, Skill2, Skill3 (e.g., Languages: Java, Python).
+                    Tip: Use the format: Category: Skill1, Skill2, Skill3 (e.g.,
+                    Languages: Java, Python).
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Projects */}
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[5]}
@@ -973,7 +1121,11 @@ const ResumeBuilder = () => {
                             placeholder="Select month"
                             value={project.startMonth}
                             onChange={(e) =>
-                              updateProject(project.id, "startMonth", e.target.value)
+                              updateProject(
+                                project.id,
+                                "startMonth",
+                                e.target.value
+                              )
                             }
                             options={months}
                           />
@@ -983,7 +1135,11 @@ const ResumeBuilder = () => {
                             placeholder="2023"
                             value={project.startYear}
                             onChange={(e) =>
-                              updateProject(project.id, "startYear", e.target.value)
+                              updateProject(
+                                project.id,
+                                "startYear",
+                                e.target.value
+                              )
                             }
                             min="1900"
                             max="2030"
@@ -995,7 +1151,11 @@ const ResumeBuilder = () => {
                             placeholder="Select month"
                             value={project.endMonth}
                             onChange={(e) =>
-                              updateProject(project.id, "endMonth", e.target.value)
+                              updateProject(
+                                project.id,
+                                "endMonth",
+                                e.target.value
+                              )
                             }
                             options={months}
                           />
@@ -1005,7 +1165,11 @@ const ResumeBuilder = () => {
                             placeholder="2023"
                             value={project.endYear}
                             onChange={(e) =>
-                              updateProject(project.id, "endYear", e.target.value)
+                              updateProject(
+                                project.id,
+                                "endYear",
+                                e.target.value
+                              )
                             }
                             min="1900"
                             max="2030"
@@ -1040,7 +1204,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Achievements Section */}
             <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[6]}
@@ -1061,7 +1224,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Certifications Section */}
             <div className="mt-6 bg-white rounded-lg border border-gray-200 shadow-sm">
               <SectionHeader
                 step={steps[7]}
@@ -1082,7 +1244,6 @@ const ResumeBuilder = () => {
               )}
             </div>
 
-            {/* Generate Resume Button */}
             <div className="mt-8 flex justify-center">
               <button
                 onClick={handleGenerateResume}
@@ -1104,23 +1265,28 @@ const ResumeBuilder = () => {
               Back to Editor
             </button>
             <button
-              onClick={() => document.getElementById('download-pdf').click()}
-              className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-lg"
+              onClick={handleDownloadPDF}
+              disabled={isGeneratingPDF}
+              className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
-              <span>Download as PDF</span>
+              <span>
+                {isGeneratingPDF ? "Generating PDF..." : "Download as PDF"}
+              </span>
             </button>
           </div>
-          <TemplateComponent // Dynamically render the selected template
-            personalInfo={personalInfo}
-            summary={summary}
-            education={education}
-            experience={experience}
-            skills={skills}
-            projects={projects}
-            achievements={achievements}
-            certifications={certifications}
-          />
+          <div ref={resumeRef}>
+            <TemplateComponent
+              personalInfo={personalInfo}
+              summary={summary}
+              education={education}
+              experience={experience}
+              skills={skills}
+              projects={projects}
+              achievements={achievements}
+              certifications={certifications}
+            />
+          </div>
         </div>
       )}
       <Footer />
@@ -1128,8 +1294,6 @@ const ResumeBuilder = () => {
   );
 };
 
-ResumeBuilder.propTypes = {
-  // No props are passed to ResumeBuilder, so no validation needed
-};
+ResumeBuilder.propTypes = {};
 
 export default ResumeBuilder;

@@ -1,71 +1,40 @@
 import json
-from python_nlp_service.modules.jd_parser import parse_jd
+import pandas as pd
+from pathlib import Path
+from python_nlp_service.modules import jd_parser
 
-# --- Sample job descriptions ---
-sample_jds = [
-    {
-        "title": "Senior Data Scientist",
-        "job_description": """
-        We are looking for a Senior Data Scientist with 5+ years of experience in Python, R, and SQL. 
-        Must have expertise in machine learning, deep learning, and natural language processing.
-        Experience with TensorFlow, PyTorch, and Scikit-learn required. 
-        Strong analytical thinking, problem-solving, and communication skills.
-        Certification in AWS Machine Learning Specialty or TensorFlow Developer Certificate is a plus.
-        Domain experience in finance or healthcare preferred.
-        """
-    },
-    {
-        "title": "Frontend Engineer",
-        "job_description": """
-        Responsibilities:
-        - Develop responsive web applications using React, Vue.js, or Angular.
-        - Collaborate with UX designers and backend engineers.
-        - Tools: VS Code, Git, Jira.
-        - 3-5 years of experience in frontend development required.
-        - Strong teamwork, creativity, and adaptability skills.
-        """
-    },
-    {
-        "title": "Product Manager",
-        "job_description": """
-        Required: Experience in product roadmap planning, stakeholder management, and agile methodologies.
-        Certifications: Certified Scrum Master or PMP preferred.
-        Soft skills: leadership, strategic thinking, time management.
-        Tools: Jira, Confluence, Trello.
-        Minimum 4 years of experience in tech or e-commerce domain.
-        """
-    },
-    {
-        "title": "DevOps Engineer",
-        "job_description": """
-        Must have: Docker, Kubernetes, Jenkins, CI/CD pipelines, cloud platforms (AWS, GCP, Azure).
-        Experience: 3+ years in DevOps or cloud engineering.
-        Soft skills: problem solving, collaboration, adaptability.
-        Certifications: Certified Kubernetes Administrator or AWS Solutions Architect.
-        """
-    },
-    {
-        "title": "UX Designer",
-        "job_description": """
-        Responsibilities:
-        - Design wireframes, prototypes, and visual designs using Figma, Adobe XD, and Sketch.
-        - Strong creativity, presentation skills, and attention to detail required.
-        - Experience in UI/UX design for mobile and web platforms (2-4 years).
-        - Knowledge of user research, usability testing, and design systems is a plus.
-        """
-    }
-]
+# Path to your JD dataset (CSV/JSON)
+DATASET_PATH = Path("datasets/job_descriptions.csv")
+
+def load_jds():
+    if DATASET_PATH.suffix == ".csv":
+        df = pd.read_csv(DATASET_PATH)
+        return df.to_dict(orient="records")
+    elif DATASET_PATH.suffix == ".json":
+        with open(DATASET_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    else:
+        raise ValueError("Unsupported dataset format. Use CSV or JSON.")
 
 def main():
-    print(f"Evaluating {len(sample_jds)} sample job descriptions...\n")
-    
-    for jd in sample_jds:
+    print(f"Evaluating JDs from {DATASET_PATH}...\n")
+
+    jds = load_jds()
+
+    for jd in jds[:10]:  # limit for testing
+        title = jd.get("title", "Unknown Role")
+        description = jd.get("description", "")
+
+        try:
+            parsed = jd_parser.parse_jd(description)
+        except Exception as e:
+            print(f"[ERROR] Failed to parse JD '{title}': {e}")
+            continue
+
         print("="*80)
-        print(f"TITLE: {jd['title']}\n")
-        print("JOB DESCRIPTION:\n", jd["job_description"][:500], "...\n")
-        parsed = parse_jd(jd["job_description"])
-        print("PARSED OUTPUT:\n", json.dumps(parsed, indent=2, ensure_ascii=False))
-        print("="*80)
+        print(f"TITLE: {title}\n")
+        print(f"JOB DESCRIPTION:\n{description[:500]} ...\n")  # preview
+        print("PARSED OUTPUT:\n", json.dumps(parsed, indent=2))
 
 if __name__ == "__main__":
     main()

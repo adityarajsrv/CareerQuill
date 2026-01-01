@@ -1,272 +1,265 @@
+/* eslint-disable no-unused-vars */
+import PropTypes from "prop-types";
 import { FaLocationDot } from "react-icons/fa6";
-import profile_martin from "../assets/profile_martin.png";
 import { IoCall, IoMailSharp } from "react-icons/io5";
 import { FaLinkedin } from "react-icons/fa";
+import { useState } from "react";
 
-const ResumeTemplate5 = () => {
+const ResumeTemplate5 = ({
+  personalInfo,
+  summary,
+  education,
+  experience,
+  skills,
+  projects,
+  achievements,
+}) => {
+  // For Template5, we need to handle additional fields
+  const [languages, setLanguages] = useState("");
+  const [hobbies, setHobbies] = useState("");
+
   return (
     <div className="max-w-3xl mx-auto py-6 px-8 bg-white shadow-md border border-gray-300 text-sm">
       <div className="flex flex-row justify-between mb-5">
         <div className="flex flex-row space-x-3">
-          <img
-            src={profile_martin}
-            alt="Profile of Martin Smith"
-            className="h-28 w-28 mr-5 object-cover"
-          />
+          <div className="h-28 w-28 mr-5 bg-gray-200 flex items-center justify-center text-gray-500">
+            Profile
+          </div>
           <div className="mt-3">
-            <h2 className="text-4xl font-extrabold tracking-wide">MARTIN</h2>
-            <h2 className="text-4xl font-bold">SMITH</h2>
+            <h2 className="text-4xl font-extrabold tracking-wide">
+              {personalInfo.firstName?.toUpperCase() || "FIRST"}
+            </h2>
+            <h2 className="text-4xl font-bold">
+              {personalInfo.lastName?.toUpperCase() || "LAST"}
+            </h2>
             <p className="text-md tracking-wider">
-              Senior Digital Marketing Specialist
+              {/* This could be a new field or derived from experience */}
+              {experience?.[0]?.position || "Professional Title"}
             </p>
           </div>
         </div>
         <div className="flex flex-col items-end space-y-1 mt-4">
-          <div className="flex flex-row justify-center items-center space-x-1.5">
-            <p>(415) 555-1234</p>
-            <IoCall />
-          </div>
-          <div className="flex flex-row justify-center items-center space-x-1.5">
-            <p>martin.smith@outlook.com</p>
-            <IoMailSharp />
-          </div>
-          <div className="flex flex-row justify-center items-center space-x-1.5">
-            <p>123 Market St, San Francisco, CA 94103</p>
-            <FaLocationDot />
-          </div>
-          <div className="flex flex-row justify-center items-center space-x-1.5">
-            <p>linkedin.com/in/martinsmith</p>
-            <FaLinkedin />
-          </div>
+          {personalInfo.phone && (
+            <div className="flex flex-row justify-center items-center space-x-1.5">
+              <p>{personalInfo.phone}</p>
+              <IoCall />
+            </div>
+          )}
+          {personalInfo.email && (
+            <div className="flex flex-row justify-center items-center space-x-1.5">
+              <p>{personalInfo.email}</p>
+              <IoMailSharp />
+            </div>
+          )}
+          {(personalInfo.address || personalInfo.city || personalInfo.state) && (
+            <div className="flex flex-row justify-center items-center space-x-1.5">
+              <p>
+                {personalInfo.address || ""}
+                {personalInfo.city && `, ${personalInfo.city}`}
+                {personalInfo.state && `, ${personalInfo.state}`}
+              </p>
+              <FaLocationDot />
+            </div>
+          )}
+          {personalInfo.linkedin && (
+            <div className="flex flex-row justify-center items-center space-x-1.5">
+              <p>{personalInfo.linkedin}</p>
+              <FaLinkedin />
+            </div>
+          )}
         </div>
       </div>
       <div className="h-0.25 w-full bg-black mb-3"></div>
       <div className="flex flex-row">
         <div className="w-1/3 pr-4">
           <div className="grid grid-cols-1 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                PROFILE
-              </h3>
-              <p className="text-gray-600">
-                Results-driven Digital Marketing Specialist with over 7 years of
-                experience in developing and executing data-driven marketing
-                strategies. Proven track record of increasing brand visibility,
-                driving website traffic, and boosting conversion rates through
-                SEO, SEM, and social media campaigns. Adept at leading
-                cross-functional teams and leveraging analytics to optimize
-                performance.
-              </p>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                SKILLS
-              </h3>
-              <ul className="list-disc list-inside space-y-1.5">
-                <li>Search Engine Optimization (SEO)</li>
-                <li>Pay-Per-Click (PPC) Advertising</li>
-                <li>Social Media Marketing</li>
-                <li>Content Strategy Development</li>
-                <li>Data Analytics (Google Analytics, Tableau)</li>
-                <li>Email Marketing Automation</li>
-                <li>Project Management</li>
-              </ul>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                LANGUAGE
-              </h3>
-              <ul className="list-disc list-inside space-y-1.5">
-                <li>English (Native)</li>
-                <li>Spanish (Fluent)</li>
-                <li>French (Intermediate)</li>
-              </ul>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                ACHIEVEMENTS
-              </h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>
-                  Increased organic website traffic by 180% through advanced SEO
-                  strategies for a retail client in 2022.
-                </li>
-                <li>
-                  Spearheaded a social media campaign that boosted brand
-                  engagement by 95% in 2023.
-                </li>
-              </ul>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                HOBBIES/INTERESTS
-              </h3>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Digital Photography</li>
-                <li>Blogging on Marketing Trends</li>
-                <li>Competitive Chess</li>
-              </ul>
-            </div>
+            {summary && (
+              <div>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  PROFILE
+                </h3>
+                <p className="text-gray-600">{summary}</p>
+              </div>
+            )}
+            
+            {summary && <div className="h-0.25 w-full bg-black"></div>}
+            
+            {skills && (
+              <div>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  SKILLS
+                </h3>
+                <ul className="list-disc list-inside space-y-1.5">
+                  {skills.split('\n').filter(skill => skill.trim().length > 0).map((skill, index) => (
+                    <li key={index}>{skill.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {skills && <div className="h-0.25 w-full bg-black"></div>}
+            
+            {/* Languages section - would need to be added to form */}
+            {languages && (
+              <div>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  LANGUAGE
+                </h3>
+                <ul className="list-disc list-inside space-y-1.5">
+                  {languages.split('\n').filter(lang => lang.trim().length > 0).map((lang, index) => (
+                    <li key={index}>{lang.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {languages && <div className="h-0.25 w-full bg-black"></div>}
+            
+            {achievements && (
+              <div>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  ACHIEVEMENTS
+                </h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {achievements.split('\n').filter(ach => ach.trim().length > 0).map((ach, index) => (
+                    <li key={index}>{ach.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {achievements && <div className="h-0.25 w-full bg-black"></div>}
+            
+            {/* Hobbies section - would need to be added to form */}
+            {hobbies && (
+              <div>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  HOBBIES/INTERESTS
+                </h3>
+                <ul className="list-disc list-inside space-y-1">
+                  {hobbies.split('\n').filter(hobby => hobby.trim().length > 0).map((hobby, index) => (
+                    <li key={index}>{hobby.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
+        
         <div className="w-0.25 bg-black mx-4"></div>
+        
         <div className="w-2/3 pl-3">
           <div className="grid grid-cols-1 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                EDUCATION
-              </h3>
-              <div className="mb-4">
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">
-                    • Master of Business Administration (MBA), Marketing
-                  </p>
-                  <p className="text-gray-600">2018 - 2020</p>
-                </div>
-                <p className="text-gray-600">
-                  University of California, Berkeley, Haas School of Business
-                  <br />
-                  Graduated with honors, focusing on digital marketing
-                  strategies and consumer behavior analytics. Completed a
-                  capstone project on optimizing e-commerce conversion funnels.
-                </p>
-              </div>
+            {education && education.length > 0 && education[0].school && (
               <div>
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">
-                    • Bachelor of Arts in Communication
-                  </p>
-                  <p className="text-gray-600">2014 - 2018</p>
-                </div>
-                <p className="text-gray-600">
-                  University of Southern California, Los Angeles
-                  <br />
-                  Specialized in digital media and public relations. Served as
-                  president of the Marketing Club, organizing events to connect
-                  students with industry professionals.
-                </p>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  EDUCATION
+                </h3>
+                {education.map((edu, index) => (
+                  edu.school && (
+                    <div key={index} className={`${index > 0 ? 'mt-4' : 'mb-4'}`}>
+                      <div className="flex flex-row justify-between">
+                        <p className="font-medium">
+                          • {edu.degree}{edu.field && `, ${edu.field}`}
+                        </p>
+                        <p className="text-gray-600">
+                          {edu.startDate && `${edu.startDate} - `}
+                          {edu.current ? "Present" : edu.endDate || ""}
+                        </p>
+                      </div>
+                      <p className="text-gray-600">
+                        {edu.school}
+                        {edu.gpa && <><br />GPA: {edu.gpa}</>}
+                      </p>
+                    </div>
+                  )
+                ))}
               </div>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                WORK EXPERIENCE
-              </h3>
-              <div className="mb-4">
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">BrightWave Marketing</p>
-                  <p className="text-gray-600">2021 - Present</p>
-                </div>
-                <p className="text-gray-600">
-                  Senior Digital Marketing Manager
-                </p>
-                <ul className="list-disc list-inside space-y-1 ml-5">
-                  <li>
-                    Led a team of 8 marketers to develop and execute
-                    multi-channel campaigns, increasing client ROI by 35%.
-                  </li>
-                  <li>
-                    Optimized PPC campaigns, reducing cost-per-click by 20%
-                    while improving conversion rates.
-                  </li>
-                  <li>
-                    Implemented data-driven SEO strategies, resulting in a 150%
-                    increase in organic traffic for key clients.
-                  </li>
-                </ul>
-              </div>
-              <div className="mb-4">
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">NextGen Solutions</p>
-                  <p className="text-gray-600">2019 - 2021</p>
-                </div>
-                <p className="text-gray-600">Digital Marketing Specialist</p>
-                <ul className="list-disc list-inside space-y-1 ml-5">
-                  <li>
-                    Managed social media accounts for 10+ clients, growing
-                    follower engagement by 80% through targeted content.
-                  </li>
-                  <li>
-                    Designed and executed email marketing campaigns, achieving a
-                    25% open rate and 10% click-through rate.
-                  </li>
-                  <li>
-                    Collaborated with design teams to create visually compelling
-                    branding materials.
-                  </li>
-                </ul>
-              </div>
+            )}
+            
+            {education && education.length > 0 && education[0].school && (
+              <div className="h-0.25 w-full bg-black"></div>
+            )}
+            
+            {experience && experience.length > 0 && experience[0].company && (
               <div>
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">CreativePulse Agency</p>
-                  <p className="text-gray-600">2017 - 2019</p>
-                </div>
-                <p className="text-gray-600">Marketing Coordinator</p>
-                <ul className="list-disc list-inside space-y-1 ml-5">
-                  <li>
-                    Supported campaign execution for a portfolio of 15 clients,
-                    focusing on content creation and SEO.
-                  </li>
-                  <li>
-                    Analyzed campaign performance using Google Analytics,
-                    providing actionable insights to improve results.
-                  </li>
-                  <li>
-                    Assisted in rebranding efforts, including logo design and
-                    website redesign for 3 major clients.
-                  </li>
-                </ul>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  WORK EXPERIENCE
+                </h3>
+                {experience.map((exp, index) => (
+                  exp.company && (
+                    <div key={index} className="mb-4">
+                      <div className="flex flex-row justify-between">
+                        <p className="font-medium">{exp.company}</p>
+                        <p className="text-gray-600">
+                          {exp.startDate && `${exp.startDate} - `}
+                          {exp.current ? "Present" : exp.endDate || ""}
+                        </p>
+                      </div>
+                      <p className="text-gray-600">{exp.position}</p>
+                      {exp.description && (
+                        <ul className="list-disc list-inside space-y-1 ml-5">
+                          {exp.description.split(/[.!?]+/).filter(point => point.trim().length > 0).map((point, i) => (
+                            <li key={i}>{point.trim()}{point.trim().endsWith('.') ? '' : '.'}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )
+                ))}
               </div>
-            </div>
-            <div className="h-0.25 w-full bg-black"></div>
-            <div>
-              <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
-                PROJECTS
-              </h3>
-              <div className="mb-4">
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">E-commerce SEO Overhaul</p>
-                  <p className="text-gray-600">2022</p>
-                </div>
-                <ul className="list-disc list-inside space-y-1 ml-5">
-                  <li>
-                    Revamped SEO strategy for a retail client, increasing
-                    organic traffic by 120% within 6 months.
-                  </li>
-                  <li>
-                    Collaborated with developers to optimize site speed and
-                    structure, improving user experience.
-                  </li>
-                </ul>
-              </div>
+            )}
+            
+            {experience && experience.length > 0 && experience[0].company && (
+              <div className="h-0.25 w-full bg-black"></div>
+            )}
+            
+            {projects && projects.length > 0 && projects[0].name && (
               <div>
-                <div className="flex flex-row justify-between">
-                  <p className="font-medium">
-                    Social Media Campaign for Product Launch
-                  </p>
-                  <p className="text-gray-600">2021</p>
-                </div>
-                <ul className="list-disc list-inside space-y-1 ml-5">
-                  <li>
-                    Designed and executed a multi-platform campaign, boosting
-                    product launch engagement by 80%.
-                  </li>
-                  <li>
-                    Utilized A/B testing to refine ad targeting, increasing
-                    click-through rates by 15%.
-                  </li>
-                </ul>
+                <h3 className="text-lg font-semibold uppercase tracking-wide mb-2">
+                  PROJECTS
+                </h3>
+                {projects.map((project, index) => (
+                  project.name && (
+                    <div key={index} className={`${index > 0 ? 'mt-4' : 'mb-4'}`}>
+                      <div className="flex flex-row justify-between">
+                        <p className="font-medium">{project.name}</p>
+                        <p className="text-gray-600">
+                          {project.startDate && `${project.startDate} - `}
+                          {project.endDate || ""}
+                        </p>
+                      </div>
+                      {project.technologies && (
+                        <p className="text-sm text-gray-500 mb-2">{project.technologies}</p>
+                      )}
+                      {project.description && (
+                        <ul className="list-disc list-inside space-y-1 ml-5">
+                          {project.description.split(/[.!?]+/).filter(point => point.trim().length > 0).map((point, i) => (
+                            <li key={i}>{point.trim()}{point.trim().endsWith('.') ? '' : '.'}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+ResumeTemplate5.propTypes = {
+  personalInfo: PropTypes.object.isRequired,
+  summary: PropTypes.string,
+  education: PropTypes.array.isRequired,
+  experience: PropTypes.array.isRequired,
+  skills: PropTypes.string,
+  projects: PropTypes.array.isRequired,
+  achievements: PropTypes.string,
+  certifications: PropTypes.string,
 };
 
 export default ResumeTemplate5;
